@@ -457,127 +457,75 @@
   function loadAvailability(){
     currentSlots = {};
     const p = programs[selectedProgram];
-
     if(!p.accepting){
       showAvailabilityMessage('<strong>Próximamente.</strong> Esta experiencia todavía no tiene fechas de reserva habilitadas.', '');
+      renderCalendar();
+      return;
+    }
+    if(!APPS_SCRIPT_ENDPOINT){
+      showAvailabilityMessage('Los turnos online se habilitarán cuando el calendario de reservas esté conectado. Mientras tanto, podés copiar el resumen de la solicitud y escribir a visitas@museoscasso.com.ar.', '');
       renderCalendar();
       return;
     }
 
     showAvailabilityMessage('Consultando disponibilidad...', '');
 
-    const month = ym(viewDate);
-    const baseParams = {
-      action: 'availability',
-      program: selectedProgram,
-      month: month,
-      v: String(Date.now())
-    };
+    const oldScript = document.getElementById('scassoAvailabilityScript');
+    if(oldScript) oldScript.remove();
 
-    function receiveAvailability(payload){
+    const callbackName = 'scassoAvailabilityCallback';
+    let finished = false;
+
+    const script = document.createElement('script');
+    script.id = 'scassoAvailabilityScript';
+    script.async = true;
+    script.referrerPolicy = 'no-referrer';
+
+    const timeout = setTimeout(() => {
+      if(finished) return;
+      finished = true;
+      showAvailabilityMessage('No se pudo consultar la disponibilidad. Intentá nuevamente o escribí al museo.', 'danger');
+      renderCalendar();
+      script.remove();
+    }, 12000);
+
+    window[callbackName] = function(payload){
+      if(finished) return;
+      finished = true;
+      clearTimeout(timeout);
+
       if(payload && payload.ok && payload.slots){
         currentSlots = payload.slots;
         applyAutomaticSelectionForModality();
         if(!(isHieloCombo() && !comboIsAvailable())) showAvailabilityMessage('', '');
-        renderCalendar();
-        updateSummary();
-        return true;
+      } else {
+        const msg = payload && payload.message ? payload.message : 'No se pudo consultar la disponibilidad. Intentá nuevamente o escribí al museo.';
+        showAvailabilityMessage(msg, 'danger');
       }
-      return false;
-    }
 
-    function useProgrammedFallback(){
-      currentSlots = programmedSlots(selectedProgram, viewDate);
-      applyAutomaticSelectionForModality();
-      showAvailabilityMessage('No se pudo sincronizar con Google Calendar en esta carga. Se muestran los turnos programados de forma provisoria. Antes de confirmar, el sistema vuelve a verificar la reserva.', '');
       renderCalendar();
-      updateSummary();
-    }
+      script.remove();
+    };
 
-    function tryJsonp(){
-      const oldScript = document.getElementById('scassoAvailabilityScript');
-      if(oldScript) oldScript.remove();
+    script.onerror = () => {
+      if(finished) return;
+      finished = true;
+      clearTimeout(timeout);
+      showAvailabilityMessage('No se pudo consultar la disponibilidad. Intentá nuevamente o escribí al museo.', 'danger');
+      renderCalendar();
+      script.remove();
+    };
 
-      const callbackName = 'scassoAvailability_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-      let finished = false;
-      const script = document.createElement('script');
-      script.id = 'scassoAvailabilityScript';
-      script.async = true;
+    const params = new URLSearchParams({
+      action: 'availability',
+      program: selectedProgram,
+      month: ym(viewDate),
+      callback: callbackName,
+      v: String(Date.now())
+    });
 
-      const timeout = setTimeout(() => {
-        if(finished) return;
-        finished = true;
-        delete window[callbackName];
-        script.remove();
-        useProgrammedFallback();
-      }, 30000);
-
-      window[callbackName] = function(payload){
-        if(finished) return;
-        finished = true;
-        clearTimeout(timeout);
-        delete window[callbackName];
-        script.remove();
-        if(!receiveAvailability(payload)) useProgrammedFallback();
-      };
-
-      const params = new URLSearchParams({...baseParams, callback: callbackName});
-      script.onerror = () => {
-        if(finished) return;
-        finished = true;
-        clearTimeout(timeout);
-        delete window[callbackName];
-        script.remove();
-        useProgrammedFallback();
-      };
-      script.src = APPS_SCRIPT_ENDPOINT + '?' + params.toString();
-      document.head.appendChild(script);
-    }
-
-    const fetchParams = new URLSearchParams(baseParams);
-    fetch(APPS_SCRIPT_ENDPOINT + '?' + fetchParams.toString(), {method:'GET', cache:'no-store'})
-      .then(r => r.text())
-      .then(text => {
-        let payload;
-        try { payload = JSON.parse(text); }
-        catch(err){ payload = null; }
-        if(!receiveAvailability(payload)) tryJsonp();
-      })
-      .catch(() => tryJsonp());
-  }
-
-  function programmedSlots(program, date){
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const result = {};
-    const add = (key, times, cap) => { result[key] = times.map(t => [t, true, cap ?? null]); };
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-    for(let day=1; day<=daysInMonth; day++){
-      const d = new Date(year, month, day);
-      const key = ymd(d);
-      const dow = d.getDay();
-      if(program === 'escuelas' && dow >= 1 && dow <= 4){
-        add(key, ['08:30','09:30','10:30','13:30','14:30','15:30'], null);
-      }
-      if(program === 'publico' && year === 2026 && month >= 9 && dow === 5){
-        add(key, ['15:00','16:00','17:00'], 15);
-      }
-    }
-
-    if(program === 'hielo' && year === 2026 && month === 6){
-      ['2026-07-27','2026-07-28','2026-07-29','2026-07-30','2026-07-31'].forEach(k => add(k, ['15:00'], 20));
-    }
-
-    if(program === 'mundos'){
-      const start = new Date(2026,8,26);
-      const end = new Date(2026,9,4);
-      for(let d = new Date(start); d <= end; d.setDate(d.getDate()+1)){
-        if(d.getFullYear() === year && d.getMonth() === month) add(ymd(d), ['10:00','16:00','18:00'], 35);
-      }
-    }
-
-    return result;
+    script.src = `${APPS_SCRIPT_ENDPOINT}?${params.toString()}`;
+    document.body.appendChild(script);
   }
 
   function renderCalendar(){
@@ -773,6 +721,45 @@
     document.getElementById('downloadTicketBtn').addEventListener('click', () => downloadTicketFile(data));
   }
 
+  function submitReservationJSONP(data){
+    return new Promise((resolve, reject) => {
+      const callbackName = 'scassoReserve_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+      const script = document.createElement('script');
+      let finished = false;
+      const timer = setTimeout(() => {
+        if(finished) return;
+        finished = true;
+        cleanup();
+        reject(new Error('Tiempo de espera agotado al enviar la reserva.'));
+      }, 20000);
+      function cleanup(){
+        clearTimeout(timer);
+        try{ delete window[callbackName]; }catch(e){ window[callbackName] = undefined; }
+        if(script.parentNode) script.parentNode.removeChild(script);
+      }
+      window[callbackName] = payload => {
+        if(finished) return;
+        finished = true;
+        cleanup();
+        resolve(payload);
+      };
+      script.onerror = () => {
+        if(finished) return;
+        finished = true;
+        cleanup();
+        reject(new Error('No se pudo conectar con Apps Script.'));
+      };
+      const params = new URLSearchParams({
+        action: 'reserve',
+        callback: callbackName,
+        payload: JSON.stringify(data),
+        v: String(Date.now())
+      });
+      script.src = APPS_SCRIPT_ENDPOINT + '?' + params.toString();
+      document.body.appendChild(script);
+    });
+  }
+
   els.form.addEventListener('submit', async (ev) => {
     ev.preventDefault();
     els.formMessage.className = 'notice danger';
@@ -791,9 +778,16 @@
       return;
     }
     try{
-      await fetch(APPS_SCRIPT_ENDPOINT, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify(data)});
+      els.formMessage.className = 'notice';
+      els.formMessage.textContent = 'Enviando solicitud...';
+      const result = await submitReservationJSONP(data);
+      if(!result || !result.ok){
+        els.formMessage.className = 'notice danger';
+        els.formMessage.textContent = (result && result.message) ? result.message : 'No se pudo registrar la reserva.';
+        return;
+      }
       els.formMessage.className = 'notice success';
-      els.formMessage.innerHTML = '<strong>Solicitud enviada.</strong> Se generó una pre-reserva. Revisá tu correo: recibirás el resumen y las instrucciones de pago.';
+      els.formMessage.innerHTML = '<strong>Solicitud enviada y registrada.</strong> Código: <strong>' + (result.code || data.codigo_reserva) + '</strong>. Revisá el calendario y el correo.';
       renderTicket(data);
       loadAvailability();
     }catch(err){
