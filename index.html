@@ -113,6 +113,13 @@
     .slot{width:100%;border:0;border-radius:9px;padding:6px 5px;background:#e9f4f2;color:#164f4a;font-size:.76rem;font-weight:800;cursor:pointer}
     .slot:hover{filter:brightness(.97)}
     .slot.active{background:var(--brand2);color:#fff}
+    .slot.combo{outline:3px solid rgba(21,94,98,.28);box-shadow:0 0 0 2px rgba(255,255,255,.8) inset}
+    .ticket-cine{margin-top:14px;border:2px dashed #9b6a2e;border-radius:18px;background:linear-gradient(135deg,#fff8df,#fffdf8);padding:16px;position:relative;overflow:hidden}
+    .ticket-cine:before,.ticket-cine:after{content:"";position:absolute;top:50%;width:28px;height:28px;background:var(--paper);border:1px solid var(--line);border-radius:50%;transform:translateY(-50%)}
+    .ticket-cine:before{left:-15px}.ticket-cine:after{right:-15px}
+    .ticket-title{font-family:Georgia,serif;font-size:1.35rem;font-weight:900;color:#3a2416}
+    .ticket-code{font-family:monospace;background:#efe4d0;border-radius:999px;padding:5px 9px;display:inline-block;margin:.35rem 0}
+    .ticket-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
     .slot.full{background:#ead6cd;color:#8b2d20;cursor:not-allowed;text-decoration:none}
     .slot.closed{background:#eee7dc;color:#70665a;cursor:not-allowed}
     .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -349,10 +356,13 @@
     }
   };
 
+  const HIELO_COMBO_DATES = ['2026-07-27','2026-07-28','2026-07-29','2026-07-30','2026-07-31'];
+
   let selectedProgram = 'escuelas';
   let viewDate = new Date(programs[selectedProgram].startMonth);
   let selectedDate = null;
   let selectedSlot = null;
+  let selectedDates = [];
   let currentSlots = {};
 
   const els = {
@@ -371,7 +381,7 @@
   function selectProgram(key){
     selectedProgram = key;
     viewDate = new Date(programs[key].startMonth);
-    selectedDate = null; selectedSlot = null;
+    selectedDate = null; selectedSlot = null; selectedDates = [];
     if(key === 'publico') { els.people.value = 2; els.guides.value = 0; document.getElementById('level').value = 'Familia / público general'; }
     if(key === 'hielo') { els.people.value = 1; els.guides.value = 0; document.getElementById('level').value = 'Inicial'; }
     if(key === 'mundos') { els.people.value = 2; els.guides.value = 0; }
@@ -384,6 +394,43 @@
   function selectedModalityObj(){
     const p = programs[selectedProgram];
     return p.modalities.find(m => m.name === els.modality.value) || p.modalities[0];
+  }
+
+  function isHieloCombo(){
+    return selectedProgram === 'hielo' && String(els.modality.value || '').startsWith('Combo semanal');
+  }
+
+  function comboSlots(){
+    return HIELO_COMBO_DATES.map(fecha => ({fecha, horario:'15:00'}));
+  }
+
+  function comboIsAvailable(){
+    return HIELO_COMBO_DATES.every(fecha => {
+      const slot = (currentSlots[fecha] || []).find(s => s[0] === '15:00');
+      return slot && slot[1] === true;
+    });
+  }
+
+  function applyAutomaticSelectionForModality(){
+    if(isHieloCombo()){
+      selectedDates = [...HIELO_COMBO_DATES];
+      selectedDate = '2026-07-27 al 2026-07-31';
+      selectedSlot = '15:00';
+      if(Object.keys(currentSlots).length && !comboIsAvailable()){
+        showAvailabilityMessage('El combo semanal no está disponible completo porque una de las cinco fechas no tiene cupo. Elegí un taller individual o consultá al museo.', 'danger');
+      }
+    } else if(selectedProgram === 'hielo'){
+      selectedDates = [];
+      if(String(selectedDate || '').includes(' al ')){
+        selectedDate = null;
+        selectedSlot = null;
+      }
+    }
+  }
+
+  function dateLabelForSummary(){
+    if(isHieloCombo()) return 'lunes 27 al viernes 31 de julio de 2026';
+    return selectedDate ? dateFmt(new Date(selectedDate+'T12:00:00')) : 'Sin elegir';
   }
 
   function renderProgramInfo(){
@@ -399,6 +446,7 @@
     els.groupType.innerHTML = p.groupOptions.map(([value,label])=>`<option value="${value}">${label}</option>`).join('');
     els.groupTypeLabel.textContent = selectedProgram === 'escuelas' ? 'Tipo de institución' : 'Tipo de visitante o grupo';
     els.submitBtn.disabled = !p.accepting;
+    applyAutomaticSelectionForModality();
   }
 
   function showAvailabilityMessage(text, type='notice'){
@@ -448,7 +496,8 @@
 
       if(payload && payload.ok && payload.slots){
         currentSlots = payload.slots;
-        showAvailabilityMessage('', '');
+        applyAutomaticSelectionForModality();
+        if(!(isHieloCombo() && !comboIsAvailable())) showAvailabilityMessage('', '');
       } else {
         const msg = payload && payload.message ? payload.message : 'No se pudo consultar la disponibilidad. Intentá nuevamente o escribí al museo.';
         showAvailabilityMessage(msg, 'danger');
@@ -494,10 +543,11 @@
       html += `<div class="day ${inMonth?'':'muted'}"><div class="n">${d.getDate()}</div>`;
       if(slots.length){
         html += slots.map(([time, available, remaining]) => {
-          const active = selectedDate === key && selectedSlot === time;
-          const cls = !available ? 'full' : (active ? 'active' : '');
+          const comboActive = isHieloCombo() && selectedDates.includes(key) && time === '15:00';
+          const active = (selectedDate === key && selectedSlot === time) || comboActive;
+          const cls = !available ? 'full' : (active ? (comboActive ? 'active combo' : 'active') : '');
           const showRemaining = selectedProgram !== 'escuelas' && Number.isFinite(Number(remaining));
-          const label = !available ? `${time} no disponible` : `${time} disponible${showRemaining ? ` · ${remaining} cupos` : ''}`;
+          const label = !available ? `${time} no disponible` : (comboActive ? `${time} incluido en combo` : `${time} disponible${showRemaining ? ` · ${remaining} cupos` : ''}`);
           return `<button type="button" class="slot ${cls}" ${!available?'disabled':''} data-date="${key}" data-time="${time}">${label}</button>`;
         }).join('');
       } else if(inMonth) {
@@ -507,7 +557,7 @@
     }
     els.days.innerHTML = html;
     document.querySelectorAll('.slot:not(.full):not(.closed)').forEach(b => b.addEventListener('click', () => {
-      selectedDate = b.dataset.date; selectedSlot = b.dataset.time; renderCalendar(); updateSummary();
+      selectedDate = b.dataset.date; selectedSlot = b.dataset.time; selectedDates = []; renderCalendar(); updateSummary();
       document.getElementById('datos').scrollIntoView({behavior:'smooth', block:'start'});
     }));
   }
@@ -540,8 +590,8 @@
     document.getElementById('sumModality').textContent = els.modality.value || p.modalities[0].name;
     document.getElementById('sumPeople').textContent = n;
     document.getElementById('sumGroups').textContent = selectedProgram === 'escuelas' ? groups : 1;
-    document.getElementById('sumDate').textContent = selectedDate ? dateFmt(new Date(selectedDate+'T12:00:00')) : 'Sin elegir';
-    document.getElementById('sumSlot').textContent = selectedSlot || 'Sin elegir';
+    document.getElementById('sumDate').textContent = dateLabelForSummary();
+    document.getElementById('sumSlot').textContent = isHieloCombo() ? '15:00 · cinco encuentros' : (selectedSlot || 'Sin elegir');
     if(p.priceMode === 'a_confirmar'){
       document.getElementById('sumPrice').textContent = 'A confirmar';
       document.getElementById('priceNote').textContent = 'Esta propuesta todavía no tiene fecha ni valor publicados.';
@@ -565,19 +615,24 @@
   }
 
   function makeReservationCode(){
-    const d = selectedDate ? selectedDate.replaceAll('-', '') : 'SINFECHA';
+    const d = selectedDate ? String(selectedDate).replace(/[^0-9]/g, '') : 'SINFECHA';
     const r = Math.random().toString(36).slice(2, 7).toUpperCase();
     return `MSC-${selectedProgram.toUpperCase().slice(0,3)}-${d}-${r}`;
   }
 
   function collectData(existingCode){
+    const fechas = isHieloCombo()
+      ? comboSlots()
+      : (selectedDate && selectedSlot ? [{fecha:selectedDate, horario:selectedSlot}] : []);
     return {
       programa: programs[selectedProgram].title,
       programa_id: selectedProgram,
       modalidad: els.modality.value,
       tipo: els.groupType.value,
-      fecha: selectedDate,
-      horario: selectedSlot,
+      fecha: isHieloCombo() ? '2026-07-27 al 2026-07-31' : selectedDate,
+      horario: isHieloCombo() ? '15:00 · cinco encuentros' : selectedSlot,
+      fechas: fechas,
+      es_combo: isHieloCombo(),
       participantes: Number(els.people.value || 0),
       acompanantes: Number(els.guides.value || 0),
       grupos_necesarios: groupCount(),
@@ -603,26 +658,67 @@
     return `SOLICITUD DE RESERVA - MUSEO SCASSO\nCódigo: ${d.codigo_reserva}\nEstado: ${d.estado}\nPrograma: ${d.programa}\nModalidad: ${d.modalidad}\nFecha: ${d.fecha || 'sin elegir'}\nHorario: ${d.horario || 'sin elegir'}\nParticipantes: ${d.participantes}\nGrupos necesarios: ${d.grupos_necesarios}\nImporte orientativo: ${programs[selectedProgram].priceMode === 'a_confirmar' ? 'A confirmar' : money(d.precio_estimado)}\nResponsable: ${d.responsable}\nTeléfono: ${d.telefono}\nEmail: ${d.email}\nInstitución: ${d.institucion}\nNivel/curso: ${d.nivel} - ${d.curso}\nTemas: ${d.temas}\nConsulta/accesibilidad: ${d.accesibilidad}`;
   }
 
-  els.prev.addEventListener('click', () => { viewDate.setMonth(viewDate.getMonth()-1); selectedDate = null; selectedSlot = null; loadAvailability(); updateSummary(); });
-  els.next.addEventListener('click', () => { viewDate.setMonth(viewDate.getMonth()+1); selectedDate = null; selectedSlot = null; loadAvailability(); updateSummary(); });
-  [els.modality, els.groupType, els.people, els.guides].forEach(el => el.addEventListener('input', updateSummary));
+  els.prev.addEventListener('click', () => { viewDate.setMonth(viewDate.getMonth()-1); selectedDate = null; selectedSlot = null; selectedDates = []; loadAvailability(); updateSummary(); });
+  els.next.addEventListener('click', () => { viewDate.setMonth(viewDate.getMonth()+1); selectedDate = null; selectedSlot = null; selectedDates = []; loadAvailability(); updateSummary(); });
+  els.modality.addEventListener('change', () => { applyAutomaticSelectionForModality(); renderCalendar(); updateSummary(); });
+  [els.groupType, els.people, els.guides].forEach(el => el.addEventListener('input', updateSummary));
 
   document.getElementById('copySummary').addEventListener('click', async () => {
     await navigator.clipboard.writeText(summaryText());
     alert('Resumen copiado.');
   });
 
+  function ticketDocument(data){
+    const fechasTexto = data.es_combo
+      ? 'Lunes 27, martes 28, miércoles 29, jueves 30 y viernes 31 de julio de 2026 · 15:00'
+      : `${data.fecha} · ${data.horario}`;
+    const importe = programs[selectedProgram].priceMode === 'a_confirmar' ? 'A confirmar' : money(data.precio_estimado);
+    return `<!doctype html><html lang="es"><meta charset="utf-8"><title>Ticket ${data.codigo_reserva}</title>
+    <body style="margin:0;background:#efe6d7;font-family:Arial,sans-serif;color:#2d2118;display:grid;place-items:center;min-height:100vh">
+      <div style="width:min(760px,92vw);background:linear-gradient(135deg,#fff8df,#fffdf8);border:3px dashed #9b6a2e;border-radius:28px;padding:28px;box-shadow:0 18px 50px rgba(60,42,24,.18);position:relative">
+        <div style="text-transform:uppercase;letter-spacing:.14em;color:#0e646a;font-weight:900">Museo de Ciencias Naturales A. Scasso</div>
+        <h1 style="font-family:Georgia,serif;font-size:36px;margin:8px 0 4px">Ticket provisorio de pre-reserva</h1>
+        <div style="display:inline-block;background:#efe4d0;border-radius:999px;padding:8px 12px;font-family:monospace;font-weight:900;margin:8px 0 18px">${data.codigo_reserva}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px dashed #c8a36f;border-bottom:1px dashed #c8a36f;padding:16px 0;margin:10px 0 18px">
+          <p><strong>Estado</strong><br>${data.estado}</p><p><strong>Propuesta</strong><br>${data.programa}</p>
+          <p><strong>Modalidad</strong><br>${data.modalidad}</p><p><strong>Fecha / horario</strong><br>${fechasTexto}</p>
+          <p><strong>Responsable</strong><br>${data.responsable}</p><p><strong>Participantes</strong><br>${data.participantes}</p>
+          <p><strong>Institución / grupo</strong><br>${data.institucion}</p><p><strong>Importe orientativo</strong><br>${importe}</p>
+        </div>
+        <p style="background:#fff1d5;border-left:5px solid #b97822;padding:12px;border-radius:10px">Este ticket no confirma el pago. La reserva queda pendiente hasta que Administración verifique el comprobante.</p>
+      </div>
+    </body></html>`;
+  }
+
+  function downloadTicketFile(data){
+    const blob = new Blob([ticketDocument(data)], {type:'text/html;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ticket-${data.codigo_reserva}.html`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
   function renderTicket(data){
     const ticket = document.getElementById('ticketBox');
+    const fechasTexto = data.es_combo ? '27 al 31 de julio de 2026 · 15:00 · cinco encuentros' : `${data.fecha} · ${data.horario}`;
     ticket.classList.remove('hidden');
-    ticket.innerHTML = `<strong>Comprobante provisorio de pre-reserva</strong><br>
-      <span class="small">Código: <strong>${data.codigo_reserva}</strong> · Estado: <strong>${data.estado}</strong></span>
+    ticket.innerHTML = `<div class="ticket-cine">
+      <div class="ticket-title">Ticket provisorio de pre-reserva</div>
+      <span class="ticket-code">${data.codigo_reserva}</span>
+      <div class="row"><span>Estado</span><strong>${data.estado}</strong></div>
       <div class="row"><span>Propuesta</span><strong>${data.programa}</strong></div>
-      <div class="row"><span>Fecha y horario</span><strong>${data.fecha} · ${data.horario}</strong></div>
+      <div class="row"><span>Modalidad</span><strong>${data.modalidad}</strong></div>
+      <div class="row"><span>Fecha y horario</span><strong>${fechasTexto}</strong></div>
       <div class="row"><span>Responsable</span><strong>${data.responsable}</strong></div>
       <div class="row"><span>Importe orientativo</span><strong>${programs[selectedProgram].priceMode === 'a_confirmar' ? 'A confirmar' : money(data.precio_estimado)}</strong></div>
       <p class="small">Este comprobante queda pendiente hasta que Administración confirme el pago.</p>
-      <button class="ghost" type="button" onclick="window.print()">Imprimir / guardar comprobante</button>`;
+      <div class="ticket-actions"><button class="ghost" type="button" id="downloadTicketBtn">Descargar ticket</button><button class="ghost" type="button" onclick="window.print()">Imprimir</button></div>
+    </div>`;
+    document.getElementById('downloadTicketBtn').addEventListener('click', () => downloadTicketFile(data));
   }
 
   els.form.addEventListener('submit', async (ev) => {
@@ -632,6 +728,7 @@
     const email2 = document.getElementById('email2').value.trim();
     if(!programs[selectedProgram].accepting){ els.formMessage.textContent = 'Esta propuesta todavía no tiene fechas de reserva habilitadas.'; return; }
     if(!selectedDate || !selectedSlot){ els.formMessage.textContent = 'Falta elegir fecha y horario disponible.'; return; }
+    if(isHieloCombo() && !comboIsAvailable()){ els.formMessage.textContent = 'El combo semanal no está disponible completo. Elegí talleres individuales o consultá al museo.'; return; }
     if(email !== email2){ els.formMessage.textContent = 'Los correos no coinciden. Escribilos manualmente para evitar errores.'; return; }
     const code = makeReservationCode();
     const data = collectData(code);
