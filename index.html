@@ -419,22 +419,63 @@
       renderCalendar();
       return;
     }
+
     showAvailabilityMessage('Consultando disponibilidad...', '');
-    const callbackName = `scassoAvailability_${Date.now()}`;
-    window[callbackName] = payload => {
+
+    const oldScript = document.getElementById('scassoAvailabilityScript');
+    if(oldScript) oldScript.remove();
+
+    const callbackName = 'scassoAvailabilityCallback';
+    let finished = false;
+
+    const script = document.createElement('script');
+    script.id = 'scassoAvailabilityScript';
+    script.async = true;
+    script.referrerPolicy = 'no-referrer';
+
+    const timeout = setTimeout(() => {
+      if(finished) return;
+      finished = true;
+      showAvailabilityMessage('No se pudo consultar la disponibilidad. Intentá nuevamente o escribí al museo.', 'danger');
+      renderCalendar();
+      script.remove();
+    }, 12000);
+
+    window[callbackName] = function(payload){
+      if(finished) return;
+      finished = true;
+      clearTimeout(timeout);
+
       if(payload && payload.ok && payload.slots){
         currentSlots = payload.slots;
         showAvailabilityMessage('', '');
       } else {
-        showAvailabilityMessage('No se pudo consultar la disponibilidad. Intentá nuevamente o escribí al museo.', 'danger');
+        const msg = payload && payload.message ? payload.message : 'No se pudo consultar la disponibilidad. Intentá nuevamente o escribí al museo.';
+        showAvailabilityMessage(msg, 'danger');
       }
+
       renderCalendar();
-      delete window[callbackName];
       script.remove();
     };
-    const script = document.createElement('script');
-    script.src = `${APPS_SCRIPT_ENDPOINT}?action=availability&program=${encodeURIComponent(selectedProgram)}&month=${encodeURIComponent(ym(viewDate))}&callback=${callbackName}`;
-    script.onerror = () => { showAvailabilityMessage('No se pudo consultar la disponibilidad. Intentá nuevamente o escribí al museo.', 'danger'); renderCalendar(); delete window[callbackName]; script.remove(); };
+
+    script.onerror = () => {
+      if(finished) return;
+      finished = true;
+      clearTimeout(timeout);
+      showAvailabilityMessage('No se pudo consultar la disponibilidad. Intentá nuevamente o escribí al museo.', 'danger');
+      renderCalendar();
+      script.remove();
+    };
+
+    const params = new URLSearchParams({
+      action: 'availability',
+      program: selectedProgram,
+      month: ym(viewDate),
+      callback: callbackName,
+      v: String(Date.now())
+    });
+
+    script.src = `${APPS_SCRIPT_ENDPOINT}?${params.toString()}`;
     document.body.appendChild(script);
   }
 
