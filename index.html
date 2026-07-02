@@ -6,796 +6,91 @@
   <title>Reservas | Museo de Ciencias Naturales A. Scasso</title>
   <meta name="description" content="Reservas de visitas escolares, público general, talleres y actividades del Museo de Ciencias Naturales A. Scasso.">
   <style>
-    :root{
-      --bg:#efe6d7;
-      --paper:#fffaf0;
-      --paper2:#fffdf8;
-      --ink:#2b261f;
-      --muted:#675c4d;
-      --line:#d8cab4;
-      --brand:#7a4b28;
-      --brand2:#155e62;
-      --ok:#1f7a4f;
-      --warn:#a36200;
-      --bad:#9a3127;
-      --soft:#efe4d0;
-      --focus:#0b6c7a;
-      --shadow:0 18px 40px rgba(54,38,20,.15);
-      --radius:22px;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      color:var(--ink);
-      background:
-        linear-gradient(rgba(243,237,227,.86),rgba(243,237,227,.9)),
-        url('assets/fondo-museo.jpg') center top/900px auto repeat,
-        var(--bg);
-      line-height:1.45;
-    }
-    a{color:var(--focus)}
-    .wrap{max-width:1200px;margin:0 auto;padding:22px}
-    header.hero{
-      border:1px solid var(--line);
-      border-radius:30px;
-      background:linear-gradient(135deg,rgba(255,250,240,.96),rgba(240,225,200,.9));
-      box-shadow:var(--shadow);
-      padding:26px;
-      display:grid;
-      grid-template-columns:1.15fr .85fr;
-      gap:24px;
-      align-items:center;
-      margin:20px 0 22px;
-      overflow:hidden;
-      position:relative;
-    }
-    header.hero:after{content:"";position:absolute;right:-90px;bottom:-90px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(21,94,98,.18),transparent 70%)}
-    .logo{width:min(430px,100%);height:auto;margin-bottom:12px;mix-blend-mode:multiply}
-    .kicker{letter-spacing:.12em;text-transform:uppercase;color:var(--brand2);font-weight:800;font-size:.76rem}
-    h1{font-family:Georgia,serif;font-size:clamp(2rem,4vw,4.4rem);line-height:.96;margin:.25rem 0 .75rem;color:#3a2416}
-    h2{font-family:Georgia,serif;font-size:clamp(1.55rem,2.4vw,2.35rem);line-height:1.05;margin:0 0 12px;color:#3a2416}
-    h3{font-size:1.12rem;margin:0 0 8px;color:#3a2416}
-    p{margin:.3rem 0 .9rem}
-    .lead{font-size:1.08rem;color:var(--muted);max-width:72ch}
-    .hero-card{background:rgba(255,255,255,.62);border:1px solid rgba(122,75,40,.18);border-radius:22px;padding:18px;position:relative;z-index:1}
-    .hero-card strong{display:block;font-size:1.06rem;margin-bottom:8px}
-    .mini-list{padding:0;margin:0;list-style:none;display:grid;gap:8px}
-    .mini-list li{display:flex;gap:8px;align-items:flex-start;color:var(--muted)}
-    .dot{width:10px;height:10px;border-radius:50%;background:var(--brand2);margin-top:7px;flex:none}
-    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 22px}
-    .step{border:1px solid var(--line);background:rgba(255,250,240,.88);border-radius:18px;padding:14px;display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--ink);transition:.16s transform,.16s border-color,.16s background}
-    .step:hover{transform:translateY(-2px);border-color:var(--brand2);background:#fffdf8}
-    .step span{width:30px;height:30px;border-radius:999px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:800;flex:none}
-    .layout{display:grid;grid-template-columns:1fr 390px;gap:20px;align-items:start}
-    .panel{background:rgba(255,250,240,.94);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:18px;scroll-margin-top:16px}
-    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    .program{border:1.5px solid var(--line);background:#fffdf8;border-radius:20px;padding:0;text-align:left;cursor:pointer;transition:.16s transform,.16s border-color,.16s background;overflow:hidden;min-height:292px;display:flex;flex-direction:column}
-    .program.featured{grid-column:1 / -1;min-height:230px}
-    .program.featured .program-visual{height:170px}
-    .program:hover{transform:translateY(-2px);border-color:var(--brand)}
-    .program.active{border-color:var(--brand2);background:#edf7f5;box-shadow:0 0 0 3px rgba(30,95,92,.1)}
-    .program-body{padding:15px 16px 17px;display:flex;flex-direction:column;flex:1}
-    .program-visual{height:140px;padding:14px;border-bottom:1px solid rgba(255,255,255,.28);display:flex;align-items:flex-end;justify-content:space-between;color:white;position:relative;overflow:hidden;background-position:center;background-size:cover}
-    .program-visual:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.58))}
-    .program-visual .mark{position:relative;z-index:1;font-family:Georgia,serif;font-size:1.45rem;font-weight:900;letter-spacing:.02em;text-shadow:0 2px 10px rgba(0,0,0,.45);max-width:78%}
-    .program-visual.escuelas{background-image:url('assets/visitas-escolares.jpg')}
-    .program-visual.publico{background-image:url('assets/publico-general.jpg')}
-    .program-visual.hielo{background-image:url('assets/edad-hielo.jpg')}
-    .program-visual.mundos{background-image:url('assets/mundos-perdidos.jpg')}
-    .program-visual.explorando{background-image:url('assets/explorando-tiempo.jpg')}
-    .program .tag{display:inline-flex;border-radius:999px;background:var(--soft);padding:4px 9px;font-size:.78rem;color:var(--brand);font-weight:800;margin-bottom:8px;width:max-content}
-    .program ul{padding-left:18px;margin:8px 0 0;color:var(--muted);font-size:.92rem}
-    .program .note{margin-top:auto;color:var(--brand2);font-weight:800;font-size:.88rem;padding-top:10px}
-    .toolbar{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-    label{display:block;font-weight:750;font-size:.88rem;margin:12px 0 6px;color:#3a2b1d}
-    input,select,textarea,button{font:inherit}
-    input,select,textarea{width:100%;border:1px solid #cdbda7;border-radius:12px;background:#fffef9;padding:11px 12px;color:var(--ink);outline:none}
-    input:focus,select:focus,textarea:focus{border-color:var(--focus);box-shadow:0 0 0 3px rgba(11,108,122,.13)}
-    textarea{min-height:84px;resize:vertical}
-    .calendar-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 12px}
-    .month-title{font-weight:900;font-size:1.05rem;color:#3a2416}
-    .navbtn,.ghost,.primary{border:0;border-radius:999px;padding:10px 14px;cursor:pointer;font-weight:850}
-    .navbtn{background:var(--soft);color:var(--brand)}
-    .ghost{background:#f4ead9;color:var(--brand);border:1px solid var(--line)}
-    .primary{background:linear-gradient(135deg,var(--brand2),#0b6c7a);color:white;box-shadow:0 10px 24px rgba(11,108,122,.24)}
-    .primary:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
-    .legend{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 14px;color:var(--muted);font-size:.85rem}
-    .legend span{display:inline-flex;gap:6px;align-items:center}
-    .key{width:12px;height:12px;border-radius:4px;display:inline-block;background:#e9f4f2;border:1px solid #bcd9d4}
-    .key.full{background:#ead6cd;border-color:#d2a99c}.key.closed{background:#eee7dc;border-color:#d6cab9}
-    .week,.days{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
-    .week div{text-align:center;color:var(--muted);font-size:.78rem;font-weight:800;padding:4px}
-    .day{min-height:82px;border:1px solid var(--line);background:#fffdf8;border-radius:14px;padding:7px;display:flex;flex-direction:column;gap:5px}
-    .day.muted{opacity:.35;background:#f4ead9}
-    .day .n{font-size:.85rem;font-weight:800;color:#4b3928}
-    .slot{width:100%;border:0;border-radius:9px;padding:6px 5px;background:#e9f4f2;color:#164f4a;font-size:.76rem;font-weight:800;cursor:pointer}
-    .slot:hover{filter:brightness(.97)}
-    .slot.active{background:var(--brand2);color:#fff}
-    .slot.combo{outline:3px solid rgba(21,94,98,.28);box-shadow:0 0 0 2px rgba(255,255,255,.8) inset}
-    .ticket-cine{margin-top:14px;border:2px dashed #9b6a2e;border-radius:18px;background:linear-gradient(135deg,#fff8df,#fffdf8);padding:16px;position:relative;overflow:hidden}
-    .ticket-cine:before,.ticket-cine:after{content:"";position:absolute;top:50%;width:28px;height:28px;background:var(--paper);border:1px solid var(--line);border-radius:50%;transform:translateY(-50%)}
-    .ticket-cine:before{left:-15px}.ticket-cine:after{right:-15px}
-    .ticket-title{font-family:Georgia,serif;font-size:1.35rem;font-weight:900;color:#3a2416}
-    .ticket-code{font-family:monospace;background:#efe4d0;border-radius:999px;padding:5px 9px;display:inline-block;margin:.35rem 0}
-    .ticket-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-    .slot.full{background:#ead6cd;color:#8b2d20;cursor:not-allowed;text-decoration:none}
-    .slot.closed{background:#eee7dc;color:#70665a;cursor:not-allowed}
-    .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .notice{border-left:5px solid var(--warn);background:#fff3dc;padding:12px 14px;border-radius:13px;margin:12px 0;color:#553700}
-    .success{border-left-color:var(--ok);background:#eaf8ef;color:#17472e}
-    .danger{border-left-color:var(--bad);background:#fde7e3;color:#64211c}
-    .info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:10px}
-    .info-card{border:1px solid var(--line);border-radius:16px;background:#fffdf8;padding:13px;color:var(--muted)}
-    .info-card strong{display:block;color:var(--ink);margin-bottom:4px}
-    .summary{position:sticky;top:16px}
-    .summary-box{background:#fffdf8;border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}
-    .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #d7c6ad;padding:9px 0;color:var(--muted)}
-    .row strong{color:var(--ink);text-align:right}
-    .row:last-child{border-bottom:0}
-    .price{font-size:2rem;font-family:Georgia,serif;color:var(--brand);font-weight:900}
-    .checkbox{display:flex;gap:10px;align-items:flex-start;margin-top:12px}
-    .checkbox input{width:auto;margin-top:4px}
-    .small{font-size:.86rem;color:var(--muted)}
-    footer{padding:34px 0 22px;color:var(--muted);font-size:.9rem}
-    .hidden{display:none!important}
-    @media (max-width:960px){header.hero,.layout{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}.summary{position:static}.cards{grid-template-columns:1fr}}
-    @media (max-width:640px){.wrap{padding:12px}.steps,.toolbar,.two,.three,.info-grid{grid-template-columns:1fr}.day{min-height:68px;padding:5px}.slot{font-size:.7rem;padding:5px 3px}header.hero{padding:20px}.program-visual{height:120px}}
+    :root{--bg:#efe6d7;--paper:#fffaf0;--paper2:#fffdf8;--ink:#2b261f;--muted:#675c4d;--line:#d8cab4;--brand:#7a4b28;--brand2:#155e62;--ok:#1f7a4f;--warn:#a36200;--bad:#9a3127;--soft:#efe4d0;--focus:#0b6c7a;--shadow:0 18px 40px rgba(54,38,20,.15);--radius:22px}
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:linear-gradient(rgba(243,237,227,.88),rgba(243,237,227,.92)),url('assets/fondo-museo.jpg') center top/900px auto repeat,var(--bg);line-height:1.45} a{color:var(--focus)} .wrap{max-width:1200px;margin:0 auto;padding:22px}
+    header.hero{border:1px solid var(--line);border-radius:30px;background:linear-gradient(135deg,rgba(255,250,240,.96),rgba(240,225,200,.9));box-shadow:var(--shadow);padding:26px;display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:center;margin:20px 0 22px;overflow:hidden;position:relative}.logo{width:min(430px,100%);height:auto;margin-bottom:12px;mix-blend-mode:multiply}.kicker{letter-spacing:.12em;text-transform:uppercase;color:var(--brand2);font-weight:800;font-size:.76rem}h1{font-family:Georgia,serif;font-size:clamp(2rem,4vw,4.4rem);line-height:.96;margin:.25rem 0 .75rem;color:#3a2416}h2{font-family:Georgia,serif;font-size:clamp(1.55rem,2.4vw,2.35rem);line-height:1.05;margin:0 0 12px;color:#3a2416}h3{font-size:1.12rem;margin:0 0 8px;color:#3a2416}p{margin:.3rem 0 .9rem}.lead{font-size:1.08rem;color:var(--muted);max-width:72ch}.hero-card{background:rgba(255,255,255,.62);border:1px solid rgba(122,75,40,.18);border-radius:22px;padding:18px;position:relative;z-index:1}.mini-list{padding:0;margin:0;list-style:none;display:grid;gap:8px}.mini-list li{display:flex;gap:8px;align-items:flex-start;color:var(--muted)}.dot{width:10px;height:10px;border-radius:50%;background:var(--brand2);margin-top:7px;flex:none}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 22px}.step{border:1px solid var(--line);background:rgba(255,250,240,.88);border-radius:18px;padding:14px;display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--ink)}.step span{width:30px;height:30px;border-radius:999px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:800;flex:none}.layout{display:grid;grid-template-columns:1fr 390px;gap:20px;align-items:start}.panel{background:rgba(255,250,240,.94);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:18px;scroll-margin-top:16px}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.program{border:1.5px solid var(--line);background:#fffdf8;border-radius:20px;padding:0;text-align:left;cursor:pointer;transition:.16s transform,.16s border-color,.16s background;overflow:hidden;min-height:292px;display:flex;flex-direction:column}.program.featured{grid-column:1 / -1;min-height:230px}.program.featured .program-visual{height:170px}.program:hover{transform:translateY(-2px);border-color:var(--brand)}.program.active{border-color:var(--brand2);background:#edf7f5;box-shadow:0 0 0 3px rgba(30,95,92,.1)}.program-body{padding:15px 16px 17px;display:flex;flex-direction:column;flex:1}.program-visual{height:140px;padding:14px;border-bottom:1px solid rgba(255,255,255,.28);display:flex;align-items:flex-end;justify-content:space-between;color:white;position:relative;overflow:hidden;background-position:center;background-size:cover}.program-visual:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.58))}.program-visual .mark{position:relative;z-index:1;font-family:Georgia,serif;font-size:1.45rem;font-weight:900;letter-spacing:.02em;text-shadow:0 2px 10px rgba(0,0,0,.45);max-width:78%}.program-visual.escuelas{background-image:url('assets/visitas-escolares.jpg')}.program-visual.publico{background-image:url('assets/publico-general.jpg')}.program-visual.hielo{background-image:url('assets/edad-hielo.jpg')}.program-visual.mundos{background-image:url('assets/mundos-perdidos.jpg')}.program-visual.explorando{background-image:url('assets/explorando-tiempo.jpg')}.program .tag{display:inline-flex;border-radius:999px;background:var(--soft);padding:4px 9px;font-size:.78rem;color:var(--brand);font-weight:800;margin-bottom:8px;width:max-content}.program ul{padding-left:18px;margin:8px 0 0;color:var(--muted);font-size:.92rem}.program .note{margin-top:auto;color:var(--brand2);font-weight:800;font-size:.88rem;padding-top:10px}
+    label{display:block;font-weight:750;font-size:.88rem;margin:12px 0 6px;color:#3a2b1d}input,select,textarea,button{font:inherit}input,select,textarea{width:100%;border:1px solid #cdbda7;border-radius:12px;background:#fffef9;padding:11px 12px;color:var(--ink);outline:none}input:focus,select:focus,textarea:focus{border-color:var(--focus);box-shadow:0 0 0 3px rgba(11,108,122,.13)}textarea{min-height:84px;resize:vertical}.toolbar,.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.notice{border-left:5px solid var(--warn);background:#fff3dc;padding:12px 14px;border-radius:13px;margin:12px 0;color:#553700}.success{border-left-color:var(--ok);background:#eaf8ef;color:#17472e}.danger{border-left-color:var(--bad);background:#fde7e3;color:#64211c}.hidden{display:none!important}.small{font-size:.86rem;color:var(--muted)}.info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:10px}.info-card{border:1px solid var(--line);border-radius:16px;background:#fffdf8;padding:13px;color:var(--muted)}.info-card strong{display:block;color:var(--ink);margin-bottom:4px}.special-box{border:1px solid var(--line);border-radius:16px;background:#fffdf8;padding:14px;margin-top:14px}.choice-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.date-choice{display:flex;gap:9px;align-items:flex-start;border:1px solid var(--line);border-radius:14px;background:#fffaf0;padding:10px}.date-choice input{width:auto;margin-top:4px}.date-choice strong{display:block}.date-choice .meta{font-size:.8rem;color:var(--muted)}.discount{background:#eaf8ef;border-left:5px solid var(--ok);border-radius:12px;padding:10px;margin-top:10px;color:#17472e;font-weight:800}
+    .calendar-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0 12px}.month-title{font-weight:900;font-size:1.05rem;color:#3a2416}.navbtn,.ghost,.primary{border:0;border-radius:999px;padding:10px 14px;cursor:pointer;font-weight:850}.navbtn{background:var(--soft);color:var(--brand)}.ghost{background:#f4ead9;color:var(--brand);border:1px solid var(--line)}.primary{background:linear-gradient(135deg,var(--brand2),#0b6c7a);color:white;box-shadow:0 10px 24px rgba(11,108,122,.24)}.primary:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}.legend{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 14px;color:var(--muted);font-size:.85rem}.legend span{display:inline-flex;gap:6px;align-items:center}.key{width:12px;height:12px;border-radius:4px;display:inline-block;background:#e9f4f2;border:1px solid #bcd9d4}.key.full{background:#ead6cd;border-color:#d2a99c}.key.closed{background:#eee7dc;border-color:#d6cab9}.week,.days{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.week div{text-align:center;color:var(--muted);font-size:.78rem;font-weight:800;padding:4px}.day{min-height:82px;border:1px solid var(--line);background:#fffdf8;border-radius:14px;padding:7px;display:flex;flex-direction:column;gap:5px}.day.muted{opacity:.35;background:#f4ead9}.day.past{opacity:.4}.day .n{font-size:.85rem;font-weight:800;color:#4b3928}.slot{width:100%;border:0;border-radius:9px;padding:6px 5px;background:#e9f4f2;color:#164f4a;font-size:.76rem;font-weight:800;cursor:pointer}.slot:hover{filter:brightness(.97)}.slot.active{background:var(--brand2);color:#fff}.slot.combo{box-shadow:inset 0 0 0 2px #fff}.slot.full{background:#ead6cd;color:#8b2d20;cursor:not-allowed;text-decoration:none}.slot.closed{background:#eee7dc;color:#70665a;cursor:not-allowed}.mobile-day-detail{display:none;border:1px solid var(--line);border-radius:16px;background:#fffdf8;padding:12px;margin:12px 0}.summary{position:sticky;top:16px}.summary-box{background:#fffdf8;border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}.row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #d7c6ad;padding:9px 0;color:var(--muted)}.row strong{color:var(--ink);text-align:right}.row:last-child{border-bottom:0}.price{font-size:2rem;font-family:Georgia,serif;color:var(--brand);font-weight:900}.checkbox{display:flex;gap:10px;align-items:flex-start;margin-top:12px}.checkbox input{width:auto;margin-top:4px}.ticket-cine{border:1.8px dashed #b27631;background:#fff8df;border-radius:18px;padding:16px;margin-top:12px}.ticket-title{font-family:Georgia,serif;font-weight:900;font-size:1.3rem;color:#3a2416}.ticket-code{display:inline-block;background:#efe4d0;border-radius:999px;padding:5px 10px;margin:8px 0;font-family:monospace}.ticket-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}footer{padding:34px 0 22px;color:var(--muted);font-size:.9rem}
+    @media (max-width:960px){header.hero,.layout{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}.summary{position:static}.cards{grid-template-columns:1fr}.choice-grid{grid-template-columns:1fr}}
+    @media (max-width:640px){.wrap{padding:10px}header.hero{padding:16px;border-radius:22px}.steps,.toolbar,.two,.three,.info-grid{grid-template-columns:1fr}.panel{padding:16px;border-radius:18px}.week,.days{gap:4px}.week div{font-size:.68rem}.day{min-height:54px;padding:5px;border-radius:11px}.day .n{font-size:.78rem}.slot{font-size:0;padding:7px 3px}.slot::after{content:attr(data-short);font-size:.68rem}.slot.closed::after{content:'—'}.slot.full::after{content:'×'}.legend{font-size:.78rem}.calendar-head .navbtn{padding:8px 10px}.month-title{width:100%;text-align:center;order:-1}.mobile-day-detail{display:block}.row{font-size:.9rem}.price{font-size:1.6rem}}
+    @media print{body>*{display:none!important}#printOnly{display:block!important}}
   </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="hero">
-    <div>
-      <img class="logo" src="assets/logo-scasso.jpg" alt="Museo de Ciencias Naturales A. Scasso">
-      <div class="kicker">Reservas online</div>
-      <h1>Visitas y actividades del museo</h1>
-      <p class="lead">Elegí la propuesta, consultá la disponibilidad y completá los datos de la solicitud. Al enviar, recibirás un comprobante por correo con el detalle de la pre-reserva y las instrucciones de pago.</p>
-    </div>
-    <aside class="hero-card">
-      <strong>Información importante</strong>
-      <ul class="mini-list">
-        <li><span class="dot"></span><span>Las visitas escolares se organizan en grupos de hasta 30 alumnos.</span></li>
-        <li><span class="dot"></span><span>Los turnos no disponibles no pueden seleccionarse.</span></li>
-        <li><span class="dot"></span><span>El turno queda pre-reservado hasta confirmar el pago con Administración.</span></li>
-      </ul>
-    </aside>
-  </header>
-
-  <nav class="steps" aria-label="Pasos de reserva">
-    <a class="step" href="#propuesta"><span>1</span><strong>Elegí propuesta</strong></a>
-    <a class="step" href="#fecha"><span>2</span><strong>Fecha y horario</strong></a>
-    <a class="step" href="#datos"><span>3</span><strong>Datos del grupo</strong></a>
-    <a class="step" href="#resumen"><span>4</span><strong>Revisión y envío</strong></a>
-  </nav>
-
-  <main class="layout">
-    <section>
-      <div class="panel" id="propuesta">
-        <h2>1. ¿Qué querés reservar?</h2>
-        <div class="cards" id="programCards"></div>
-      </div>
-
-      <div class="panel" id="detalles">
-        <h2>Características de la propuesta</h2>
-        <div id="programInfo" class="notice success"></div>
-        <div class="toolbar">
-          <div>
-            <label for="modality">Modalidad / experiencia</label>
-            <select id="modality"></select>
-          </div>
-          <div>
-            <label for="groupType" id="groupTypeLabel">Tipo de institución o visitante</label>
-            <select id="groupType"></select>
-          </div>
-        </div>
-        <div class="two">
-          <div>
-            <label for="people">Cantidad de participantes</label>
-            <input id="people" type="number" min="1" max="250" value="25">
-          </div>
-          <div>
-            <label for="guides">Docentes / acompañantes</label>
-            <input id="guides" type="number" min="0" max="40" value="2">
-          </div>
-        </div>
-        <div id="capacityWarning" class="notice danger hidden"></div>
-        <div class="info-grid">
-          <div class="info-card"><strong>Actividades fuera del museo</strong> Las salidas de campo no forman parte de las visitas habituales ni de los talleres. Sólo podrán aparecer como actividad especial cuando la propuesta lo indique expresamente.</div>
-          <div class="info-card"><strong>Accesibilidad</strong> El museo está en planta alta, con espacios expositivos en un mismo nivel. Hay ascensor para personas con dificultad para subir escaleras o usuarios de silla de ruedas.</div>
-        </div>
-      </div>
-
-      <div class="panel" id="fecha">
-        <h2>2. Elegí fecha y horario</h2>
-        <p class="small" id="calendarHelp">Seleccioná únicamente un horario marcado como disponible.</p>
-        <div class="legend" aria-label="Referencia del calendario">
-          <span><i class="key"></i>Disponible</span>
-          <span><i class="key full"></i>No disponible</span>
-          <span><i class="key closed"></i>Sin turno</span>
-        </div>
-        <div id="availabilityMessage" class="notice hidden"></div>
-        <div class="calendar-head">
-          <button class="navbtn" id="prevMonth" type="button">← Mes anterior</button>
-          <div class="month-title" id="monthTitle"></div>
-          <button class="navbtn" id="nextMonth" type="button">Mes siguiente →</button>
-        </div>
-        <div class="week"><div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div><div>Dom</div></div>
-        <div class="days" id="calendarDays"></div>
-      </div>
-
-      <form class="panel" id="datos">
-        <h2>3. Datos para confirmar la reserva</h2>
-        <div class="two">
-          <div><label for="responsible">Docente / responsable adulto *</label><input id="responsible" name="responsible" required autocomplete="name"></div>
-          <div><label for="phone">Teléfono / WhatsApp *</label><input id="phone" name="phone" required autocomplete="tel"></div>
-        </div>
-        <div class="two">
-          <div><label for="email">Correo electrónico *</label><input id="email" name="email" required type="email" autocomplete="email"></div>
-          <div><label for="email2">Repetir correo *</label><input id="email2" name="email2" required type="email"></div>
-        </div>
-        <div class="two">
-          <div><label for="school">Escuela / institución / apellido familiar *</label><input id="school" name="school" required></div>
-          <div><label for="address">Dirección / localidad</label><input id="address" name="address"></div>
-        </div>
-        <div class="three">
-          <div><label for="level">Nivel</label><select id="level"><option>Inicial</option><option>Primario</option><option>Secundario</option><option>Superior</option><option>Familia / público general</option><option>Otro</option></select></div>
-          <div><label for="course">Curso / sala / edad</label><input id="course" name="course"></div>
-          <div><label for="city">Ciudad</label><input id="city" name="city" value="San Nicolás"></div>
-        </div>
-        <label for="topics">Temas curriculares, intereses o adaptación solicitada</label>
-        <textarea id="topics" name="topics" placeholder="Ej.: fósiles, río Paraná, biodiversidad, Yaguarón, accesibilidad, grupo con necesidades particulares..."></textarea>
-        <label for="accessibility">Consulta adicional, accesibilidad o servicios importantes</label>
-        <textarea id="accessibility" name="accessibility" placeholder="Ej.: movilidad reducida, ingreso con cochecito, requerimientos sensoriales, horario de transporte, comprobante, consulta administrativa..."></textarea>
-        <div class="checkbox">
-          <input type="checkbox" id="accept" required>
-          <label for="accept" style="margin:0;font-weight:600">Leí las condiciones de reserva, capacidad, puntualidad y modalidad de pago. Entiendo que recibiré una pre-reserva por correo y que la confirmación final depende del pago.</label>
-        </div>
-        <div class="notice hidden" id="formMessage"></div>
-        <div class="summary-box hidden" id="ticketBox"></div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
-          <button class="primary" type="submit" id="submitBtn">Enviar solicitud de reserva</button>
-          <button class="ghost" type="button" id="copySummary">Copiar resumen</button>
-        </div>
-      </form>
-    </section>
-
-    <aside class="panel summary" aria-live="polite" id="resumen">
-      <h2>4. Resumen</h2>
-      <div class="summary-box">
-        <div class="row"><span>Propuesta</span><strong id="sumProgram">-</strong></div>
-        <div class="row"><span>Modalidad</span><strong id="sumModality">-</strong></div>
-        <div class="row"><span>Fecha</span><strong id="sumDate">Sin elegir</strong></div>
-        <div class="row"><span>Horario</span><strong id="sumSlot">Sin elegir</strong></div>
-        <div class="row"><span>Participantes</span><strong id="sumPeople">25</strong></div>
-        <div class="row"><span>Grupos necesarios</span><strong id="sumGroups">1</strong></div>
-      </div>
-      <div class="summary-box">
-        <div class="small">Importe orientativo</div>
-        <div class="price" id="sumPrice">$ 0</div>
-        <p class="small" id="priceNote">El importe final se confirma según modalidad y cantidad de participantes.</p>
-      </div>
-      <div class="notice" id="paymentNotice">
-        Al enviar la solicitud se genera una pre-reserva. El pago se realiza por transferencia al alias <strong>DONBOSCO50452</strong> y el comprobante se envía por WhatsApp a Administración: <strong>3364-273394</strong>.
-      </div>
-    </aside>
-  </main>
-  <footer>
-    Museo de Ciencias Naturales A. Scasso · Don Bosco 580 · San Nicolás de los Arroyos · visitas@museoscasso.com.ar · info@museoscasso.com.ar
-  </footer>
+<div class="wrap" id="appRoot">
+  <header class="hero"><div><img class="logo" src="assets/logo-scasso.jpg" alt="Museo de Ciencias Naturales A. Scasso"><div class="kicker">Reservas online</div><h1>Visitas y actividades del museo</h1><p class="lead">Elegí la propuesta, consultá disponibilidad y completá los datos. Al enviar, se registra una pre-reserva y recibís el detalle por correo.</p></div><aside class="hero-card"><strong>Información importante</strong><ul class="mini-list"><li><span class="dot"></span><span>El sistema no muestra turnos de fechas pasadas.</span></li><li><span class="dot"></span><span>El turno queda pre-reservado hasta confirmar el pago.</span></li><li><span class="dot"></span><span>El ticket es provisorio y se puede imprimir o descargar por separado.</span></li></ul></aside></header>
+  <nav class="steps"><a class="step" href="#propuesta"><span>1</span><strong>Elegí propuesta</strong></a><a class="step" href="#fecha"><span>2</span><strong>Fecha y horario</strong></a><a class="step" href="#datos"><span>3</span><strong>Datos del grupo</strong></a><a class="step" href="#resumen"><span>4</span><strong>Revisión y envío</strong></a></nav>
+  <main class="layout"><section>
+    <div class="panel" id="propuesta"><h2>1. ¿Qué querés reservar?</h2><div class="cards" id="programCards"></div></div>
+    <div class="panel" id="detalles"><h2>Características de la propuesta</h2><div id="programInfo" class="notice success"></div><div class="toolbar"><div><label for="modality">Modalidad / experiencia</label><select id="modality"></select></div><div><label for="groupType" id="groupTypeLabel">Tipo de institución o visitante</label><select id="groupType"></select></div></div><div class="two"><div><label for="people" id="peopleLabel">Cantidad de participantes</label><input id="people" type="number" min="1" max="300" value="25"></div><div><label for="guides">Docentes / acompañantes</label><input id="guides" type="number" min="0" max="60" value="2"></div></div><div id="specialOptions" class="special-box hidden"></div><div id="capacityWarning" class="notice danger hidden"></div><div class="info-grid"><div class="info-card"><strong>Actividades fuera del museo</strong> Las salidas de campo sólo podrán aparecer como actividad especial cuando la propuesta lo indique expresamente.</div><div class="info-card"><strong>Accesibilidad</strong> El museo está en planta alta, con espacios expositivos en un mismo nivel. Hay ascensor para personas con dificultad para subir escaleras o usuarios de silla de ruedas.</div></div></div>
+    <div class="panel" id="fecha"><h2>2. Elegí fecha y horario</h2><p class="small" id="calendarHelp">Seleccioná únicamente un horario disponible. Las fechas pasadas no se ofrecen.</p><div class="legend"><span><i class="key"></i>Disponible</span><span><i class="key full"></i>No disponible</span><span><i class="key closed"></i>Sin turno</span></div><div id="availabilityMessage" class="notice hidden"></div><div class="calendar-head"><button class="navbtn" id="prevMonth" type="button">← Mes anterior</button><button class="navbtn" id="todayBtn" type="button">Hoy</button><div class="month-title" id="monthTitle"></div><button class="navbtn" id="nextMonth" type="button">Mes siguiente →</button></div><div class="week"><div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div><div>Dom</div></div><div class="days" id="calendarDays"></div><div class="mobile-day-detail hidden" id="mobileDayDetail"></div></div>
+    <form class="panel" id="datos"><h2>3. Datos para confirmar la reserva</h2><div class="two"><div><label for="responsible">Docente / responsable adulto *</label><input id="responsible" name="responsible" required autocomplete="name"></div><div><label for="phone">Teléfono / WhatsApp *</label><input id="phone" name="phone" required autocomplete="tel"></div></div><div class="two"><div><label for="email">Correo electrónico *</label><input id="email" name="email" required type="email" autocomplete="email"></div><div><label for="email2">Repetir correo *</label><input id="email2" name="email2" required type="email"></div></div><div class="two"><div><label for="school">Escuela / institución / apellido familiar *</label><input id="school" name="school" required></div><div><label for="address">Dirección / localidad</label><input id="address" name="address"></div></div><div class="three"><div><label for="level">Nivel</label><select id="level"><option>Inicial</option><option>Primario</option><option>Secundario</option><option>Superior</option><option>Familia / público general</option><option>Otro</option></select></div><div><label for="course">Curso / sala / edad</label><input id="course" name="course"></div><div><label for="city">Ciudad</label><input id="city" name="city" value="San Nicolás"></div></div><label for="topics">Temas curriculares, intereses o adaptación solicitada</label><textarea id="topics" name="topics" placeholder="Ej.: fósiles, río Paraná, biodiversidad, Yaguarón, accesibilidad..."></textarea><label for="accessibility">Consulta adicional, accesibilidad o servicios importantes</label><textarea id="accessibility" name="accessibility"></textarea><div class="checkbox"><input type="checkbox" id="accept" required><label for="accept" style="margin:0;font-weight:600">Leí las condiciones de reserva, capacidad y modalidad de pago. Entiendo que recibiré una pre-reserva y que la confirmación final depende del pago.</label></div><div class="notice hidden" id="formMessage"></div><div class="summary-box hidden" id="ticketBox"></div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><button class="primary" type="submit" id="submitBtn">Enviar solicitud de reserva</button><button class="ghost hidden" type="button" id="newReservationBtn">Nueva reserva</button><button class="ghost" type="button" id="copySummary">Copiar resumen</button></div></form>
+  </section><aside class="panel summary" id="resumen"><h2>4. Resumen</h2><div class="summary-box"><div class="row"><span>Propuesta</span><strong id="sumProgram">-</strong></div><div class="row"><span>Modalidad</span><strong id="sumModality">-</strong></div><div class="row"><span>Fecha(s)</span><strong id="sumDate">Sin elegir</strong></div><div class="row"><span>Horario</span><strong id="sumSlot">Sin elegir</strong></div><div class="row"><span>Participantes</span><strong id="sumPeople">25</strong></div><div class="row"><span>Grupos necesarios</span><strong id="sumGroups">1</strong></div></div><div class="summary-box"><div class="small">Importe orientativo</div><div class="price" id="sumPrice">$ 0</div><p class="small" id="priceNote">El importe final se confirma según modalidad y cantidad de participantes.</p></div><div class="notice" id="paymentNotice">Al enviar la solicitud se genera una pre-reserva. El pago se realiza por transferencia al alias <strong>DONBOSCO50452</strong> y el comprobante se envía por WhatsApp a Administración: <strong>3364-273394</strong>.</div></aside></main>
+  <footer>Museo de Ciencias Naturales A. Scasso · Don Bosco 580 · San Nicolás de los Arroyos · visitas@museoscasso.com.ar · info@museoscasso.com.ar</footer>
 </div>
-
 <script>
-  const APPS_SCRIPT_ENDPOINT = "https://script.google.com/macros/s/AKfycbympMMx8jODBiYDSo7bdlI-4b3ZRJhbMhiFPaM8_MlFgGNelHcr39lWbTPvXYeSarQ0mA/exec";
-
-  const money = n => new Intl.NumberFormat('es-AR', {style:'currency', currency:'ARS', maximumFractionDigits:0}).format(n || 0);
-  const dateFmt = d => new Intl.DateTimeFormat('es-AR', {weekday:'long', day:'numeric', month:'long', year:'numeric'}).format(d);
-  const ym = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-  const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-
-  const programs = {
-    escuelas: {
-      title:"Visitas escolares", tag:"Docentes", visual:"escuelas", featured:true,
-      intro:"Visitas para grupos escolares, con reserva previa y propuestas adaptadas al nivel educativo.",
-      bullets:["Lunes a jueves", "08:30 a 12:00 y 13:30 a 16:00", "Hasta 30 alumnos por grupo", "Libre, guiada tradicional o con tema específico"],
-      note:"Actividad principal del museo", startMonth:new Date(2026,6,1), capacity:30, priceMode:"por_alumno", accepting:true,
-      groupOptions:[["publica","Escuela pública / institución pública"],["privada","Escuela privada / institución privada"],["otro","Otro grupo educativo"]],
-      prices:{publica:2200, privada:3600, otro:3600},
-      modalities:[{name:"Libre", multiplier:1},{name:"Guiada con métodos tradicionales", multiplier:1},{name:"Guiada con tema específico", multiplier:1}]
-    },
-    publico: {
-      title:"Público general", tag:"Desde octubre", visual:"publico",
-      intro:"Turnos para visitantes individuales, familias y turismo, con inscripción previa los días viernes.",
-      bullets:["Previsto para octubre de 2026", "Día viernes", "Recorridos de una hora"],
-      note:"Apertura con turno previo", startMonth:new Date(2026,9,1), capacity:15, priceMode:"por_persona", accepting:true,
-      groupOptions:[["general","Público general / familia"],["menor","Menor"],["otro","Otro grupo"]],
-      prices:{general:3600, menor:2200, otro:3600},
-      modalities:[{name:"Recorrido general sin guía", multiplier:1},{name:"Recorrido familiar con guía", multiplier:1.35},{name:"Recorrido especial temático", multiplier:1.75}]
-    },
-    hielo: {
-      title:"Exploradores de la Edad del Hielo", tag:"27 al 31 de julio", visual:"hielo",
-      intro:"Talleres de vacaciones de invierno para niñas y niños de 7 a 12 años. Los talleres no se repiten: se puede elegir el combo semanal o encuentros independientes.",
-      bullets:["Lunes 27 a viernes 31 de julio", "15:00 a 16:00", "Cupo máximo: 20 participantes", "Aulas calefaccionadas"],
-      note:"Taller especial para infancias", startMonth:new Date(2026,6,1), capacity:20, priceMode:"por_persona", accepting:true,
-      groupOptions:[["general","Participante individual"]],
-      prices:{general:6000},
-      modalities:[
-        {name:"Combo semanal: cinco talleres", fixedPrice:24000},
-        {name:"Día 1: Descubriendo el Pago de los Arroyos y sus fósiles", multiplier:1},
-        {name:"Día 2: Paleontología y tiempo geológico", multiplier:1},
-        {name:"Día 3: La megafauna", multiplier:1},
-        {name:"Día 4: Macro y microfauna al microscopio", multiplier:1},
-        {name:"Día 5: Fogón de cierre e integración", multiplier:1}
-      ]
-    },
-    mundos: {
-      title:"Jornadas Mundos Perdidos", tag:"26 sep – 4 oct", visual:"mundos",
-      intro:"Jornadas de divulgación científica dedicadas al río Paraná, con experiencias educativas, participativas e inmersivas.",
-      bullets:["26 de septiembre al 4 de octubre de 2026", "Ciencia, arte, patrimonio y territorio", "Agenda con cupos por actividad"],
-      note:"Evento especial anual", startMonth:new Date(2026,8,1), capacity:35, priceMode:"por_persona", accepting:true,
-      groupOptions:[["general","Público general"],["menor","Menor"],["publica","Escuela pública / institución pública"],["privada","Escuela privada / institución privada"],["otro","Otro grupo"]],
-      prices:{general:4500, menor:3000, publica:3000, privada:4500, otro:4500},
-      modalities:[
-        {name:"Pase completo a las jornadas", fixedPrice:18000},
-        {name:"Pase fines de semana", fixedPrice:9500},
-        {name:"Día de semana: talleres y capacitaciones", multiplier:1},
-        {name:"Actividad puntual", multiplier:1},
-        {name:"Salida de campo especial", multiplier:1.75}
-      ]
-    },
-    explorando: {
-      title:"Explorando por el tiempo", tag:"Próximamente", visual:"explorando",
-      intro:"Experiencia de realidad inmersiva con proyecciones y audio. La propuesta simula una máquina del tiempo para viajar por distintos momentos del pasado, el presente y el futuro.",
-      bullets:["Capacidad: 20 personas", "Proyecciones y audio", "Programas temporales a definir", "Sin salida de campo"],
-      note:"Fechas a anunciar", startMonth:new Date(2026,9,1), capacity:20, priceMode:"a_confirmar", accepting:false,
-      groupOptions:[["general","Público general / escuela / grupo"]],
-      prices:{general:0},
-      modalities:[{name:"Programa pasado", multiplier:1},{name:"Programa presente", multiplier:1},{name:"Programa futuro", multiplier:1}]
-    }
-  };
-
-  const HIELO_COMBO_DATES = ['2026-07-27','2026-07-28','2026-07-29','2026-07-30','2026-07-31'];
-
-  let selectedProgram = 'escuelas';
-  let viewDate = new Date(programs[selectedProgram].startMonth);
-  let selectedDate = null;
-  let selectedSlot = null;
-  let selectedDates = [];
-  let currentSlots = {};
-
-  const els = {
-    cards:document.getElementById('programCards'), info:document.getElementById('programInfo'), modality:document.getElementById('modality'), groupType:document.getElementById('groupType'), groupTypeLabel:document.getElementById('groupTypeLabel'), people:document.getElementById('people'), guides:document.getElementById('guides'), warning:document.getElementById('capacityWarning'), days:document.getElementById('calendarDays'), monthTitle:document.getElementById('monthTitle'), prev:document.getElementById('prevMonth'), next:document.getElementById('nextMonth'), form:document.getElementById('datos'), formMessage:document.getElementById('formMessage'), availabilityMessage:document.getElementById('availabilityMessage'), submitBtn:document.getElementById('submitBtn')
-  };
-
-  function initCards(){
-    els.cards.innerHTML = Object.entries(programs).map(([key,p]) => `
-      <button class="program ${key===selectedProgram?'active':''} ${p.featured?'featured':''}" type="button" data-program="${key}">
-        <div class="program-visual ${p.visual}"><span class="mark">${p.title}</span></div>
-        <div class="program-body"><span class="tag">${p.tag}</span><h3>${p.title}</h3><p>${p.intro}</p><ul>${p.bullets.map(b=>`<li>${b}</li>`).join('')}</ul><div class="note">${p.note}</div></div>
-      </button>`).join('');
-    document.querySelectorAll('.program').forEach(btn => btn.addEventListener('click', () => selectProgram(btn.dataset.program)));
-  }
-
-  function selectProgram(key){
-    selectedProgram = key;
-    viewDate = new Date(programs[key].startMonth);
-    selectedDate = null; selectedSlot = null; selectedDates = [];
-    if(key === 'publico') { els.people.value = 2; els.guides.value = 0; document.getElementById('level').value = 'Familia / público general'; }
-    if(key === 'hielo') { els.people.value = 1; els.guides.value = 0; document.getElementById('level').value = 'Inicial'; }
-    if(key === 'mundos') { els.people.value = 2; els.guides.value = 0; }
-    if(key === 'explorando') { els.people.value = 1; els.guides.value = 0; }
-    if(key === 'escuelas') { els.people.value = 25; els.guides.value = 2; document.getElementById('level').value = 'Inicial'; }
-    initCards(); renderProgramInfo(); loadAvailability(); updateSummary();
-    document.getElementById('detalles').scrollIntoView({behavior:'smooth', block:'start'});
-  }
-
-  function selectedModalityObj(){
-    const p = programs[selectedProgram];
-    return p.modalities.find(m => m.name === els.modality.value) || p.modalities[0];
-  }
-
-  function isHieloCombo(){
-    return selectedProgram === 'hielo' && String(els.modality.value || '').startsWith('Combo semanal');
-  }
-
-  function comboSlots(){
-    return HIELO_COMBO_DATES.map(fecha => ({fecha, horario:'15:00'}));
-  }
-
-  function comboIsAvailable(){
-    return HIELO_COMBO_DATES.every(fecha => {
-      const slot = (currentSlots[fecha] || []).find(s => s[0] === '15:00');
-      return slot && slot[1] === true;
-    });
-  }
-
-  function applyAutomaticSelectionForModality(){
-    if(isHieloCombo()){
-      selectedDates = [...HIELO_COMBO_DATES];
-      selectedDate = '2026-07-27 al 2026-07-31';
-      selectedSlot = '15:00';
-      if(Object.keys(currentSlots).length && !comboIsAvailable()){
-        showAvailabilityMessage('El combo semanal no está disponible completo porque una de las cinco fechas no tiene cupo. Elegí un taller individual o consultá al museo.', 'danger');
-      }
-    } else if(selectedProgram === 'hielo'){
-      selectedDates = [];
-      if(String(selectedDate || '').includes(' al ')){
-        selectedDate = null;
-        selectedSlot = null;
-      }
-    }
-  }
-
-  function dateLabelForSummary(){
-    if(isHieloCombo()) return 'lunes 27 al viernes 31 de julio de 2026';
-    return selectedDate ? dateFmt(new Date(selectedDate+'T12:00:00')) : 'Sin elegir';
-  }
-
-  function renderProgramInfo(){
-    const p = programs[selectedProgram];
-    let extra = '';
-    if(selectedProgram === 'escuelas') extra = '<br><span class="small">Los docentes no abonan entrada: 1 acompañante cada 8 alumnos. Para grupos mayores a 30 alumnos se recomienda dividir la reserva.</span>';
-    if(selectedProgram === 'publico') extra = '<br><span class="small">El público general está previsto para octubre de 2026, los días viernes, con inscripción previa. No incluye salidas de campo.</span>';
-    if(selectedProgram === 'hielo') extra = '<br><span class="small">Exploradores de la Edad del Hielo no incluye salidas de campo. Se puede elegir el combo semanal o talleres independientes.</span>';
-    if(selectedProgram === 'mundos') extra = '<br><span class="small">Mundos Perdidos tendrá agenda propia entre el 26 de septiembre y el 4 de octubre. Las salidas de campo, si se habilitan, serán actividades puntuales con inscripción previa.</span>';
-    if(selectedProgram === 'explorando') extra = '<br><span class="small">Esta propuesta todavía no tiene fechas de reserva habilitadas.</span>';
-    els.info.innerHTML = `<strong>${p.title}.</strong> ${p.intro}<br><span class="small">Capacidad orientativa: ${p.capacity} participantes por grupo o franja.</span>${extra}`;
-    els.modality.innerHTML = p.modalities.map(m=>`<option value="${m.name}">${m.name}</option>`).join('');
-    els.groupType.innerHTML = p.groupOptions.map(([value,label])=>`<option value="${value}">${label}</option>`).join('');
-    els.groupTypeLabel.textContent = selectedProgram === 'escuelas' ? 'Tipo de institución' : 'Tipo de visitante o grupo';
-    els.submitBtn.disabled = !p.accepting;
-    applyAutomaticSelectionForModality();
-  }
-
-  function showAvailabilityMessage(text, type='notice'){
-    els.availabilityMessage.className = text ? `notice ${type}` : 'notice hidden';
-    els.availabilityMessage.innerHTML = text || '';
-  }
-
-  function loadAvailability(){
-    currentSlots = {};
-    const p = programs[selectedProgram];
-    if(!p.accepting){
-      showAvailabilityMessage('<strong>Próximamente.</strong> Esta experiencia todavía no tiene fechas de reserva habilitadas.', '');
-      renderCalendar();
-      return;
-    }
-    if(!APPS_SCRIPT_ENDPOINT){
-      showAvailabilityMessage('Los turnos online se habilitarán cuando el calendario de reservas esté conectado. Mientras tanto, podés copiar el resumen de la solicitud y escribir a visitas@museoscasso.com.ar.', '');
-      renderCalendar();
-      return;
-    }
-
-    showAvailabilityMessage('Consultando disponibilidad...', '');
-
-    const oldScript = document.getElementById('scassoAvailabilityScript');
-    if(oldScript) oldScript.remove();
-
-    const callbackName = 'scassoAvailabilityCallback';
-    let finished = false;
-
-    const script = document.createElement('script');
-    script.id = 'scassoAvailabilityScript';
-    script.async = true;
-    script.referrerPolicy = 'no-referrer';
-
-    const timeout = setTimeout(() => {
-      if(finished) return;
-      finished = true;
-      showAvailabilityMessage('No se pudo consultar la disponibilidad. Intentá nuevamente o escribí al museo.', 'danger');
-      renderCalendar();
-      script.remove();
-    }, 12000);
-
-    window[callbackName] = function(payload){
-      if(finished) return;
-      finished = true;
-      clearTimeout(timeout);
-
-      if(payload && payload.ok && payload.slots){
-        currentSlots = payload.slots;
-        applyAutomaticSelectionForModality();
-        if(!(isHieloCombo() && !comboIsAvailable())) showAvailabilityMessage('', '');
-      } else {
-        const msg = payload && payload.message ? payload.message : 'No se pudo consultar la disponibilidad. Intentá nuevamente o escribí al museo.';
-        showAvailabilityMessage(msg, 'danger');
-      }
-
-      renderCalendar();
-      script.remove();
-    };
-
-    script.onerror = () => {
-      if(finished) return;
-      finished = true;
-      clearTimeout(timeout);
-      showAvailabilityMessage('No se pudo consultar la disponibilidad. Intentá nuevamente o escribí al museo.', 'danger');
-      renderCalendar();
-      script.remove();
-    };
-
-    const params = new URLSearchParams({
-      action: 'availability',
-      program: selectedProgram,
-      month: ym(viewDate),
-      callback: callbackName,
-      v: String(Date.now())
-    });
-
-    script.src = `${APPS_SCRIPT_ENDPOINT}?${params.toString()}`;
-    document.body.appendChild(script);
-  }
-
-  function renderCalendar(){
-    const year = viewDate.getFullYear(), month = viewDate.getMonth();
-    els.monthTitle.textContent = new Intl.DateTimeFormat('es-AR', {month:'long', year:'numeric'}).format(viewDate).replace(/^./, c => c.toUpperCase());
-    const first = new Date(year, month, 1);
-    const startOffset = (first.getDay()+6)%7;
-    const start = new Date(year, month, 1 - startOffset);
-    let html = '';
-    for(let i=0;i<42;i++){
-      const d = new Date(start); d.setDate(start.getDate()+i);
-      const key = ymd(d);
-      const inMonth = d.getMonth() === month;
-      const slots = currentSlots[key] || [];
-      html += `<div class="day ${inMonth?'':'muted'}"><div class="n">${d.getDate()}</div>`;
-      if(slots.length){
-        html += slots.map(([time, available, remaining]) => {
-          const comboActive = isHieloCombo() && selectedDates.includes(key) && time === '15:00';
-          const active = (selectedDate === key && selectedSlot === time) || comboActive;
-          const cls = !available ? 'full' : (active ? (comboActive ? 'active combo' : 'active') : '');
-          const showRemaining = selectedProgram !== 'escuelas' && Number.isFinite(Number(remaining));
-          const label = !available ? `${time} no disponible` : (comboActive ? `${time} incluido en combo` : `${time} disponible${showRemaining ? ` · ${remaining} cupos` : ''}`);
-          return `<button type="button" class="slot ${cls}" ${!available?'disabled':''} data-date="${key}" data-time="${time}">${label}</button>`;
-        }).join('');
-      } else if(inMonth) {
-        html += `<button type="button" class="slot closed" disabled>Sin turno</button>`;
-      }
-      html += `</div>`;
-    }
-    els.days.innerHTML = html;
-    document.querySelectorAll('.slot:not(.full):not(.closed)').forEach(b => b.addEventListener('click', () => {
-      selectedDate = b.dataset.date; selectedSlot = b.dataset.time; selectedDates = []; renderCalendar(); updateSummary();
-      document.getElementById('datos').scrollIntoView({behavior:'smooth', block:'start'});
-    }));
-  }
-
-  function groupCount(){
-    const p = programs[selectedProgram];
-    const n = Math.max(1, Number(els.people.value || 1));
-    return Math.ceil(n / p.capacity);
-  }
-
-  function calcPrice(){
-    const p = programs[selectedProgram];
-    if(p.priceMode === 'a_confirmar') return 0;
-    const type = els.groupType.value;
-    const base = p.prices[type] ?? p.prices.general ?? 0;
-    const modality = selectedModalityObj();
-    const n = Math.max(1, Number(els.people.value || 1));
-    if(modality.fixedPrice) return modality.fixedPrice * n;
-    const multiplier = modality.multiplier || 1;
-    return base * n * multiplier;
-  }
-
-  function updateSummary(){
-    const p = programs[selectedProgram];
-    const n = Math.max(1, Number(els.people.value || 1));
-    const groups = groupCount();
-    const modalityObj = selectedModalityObj();
-    const multiplier = modalityObj.multiplier || 1;
-    document.getElementById('sumProgram').textContent = p.title;
-    document.getElementById('sumModality').textContent = els.modality.value || p.modalities[0].name;
-    document.getElementById('sumPeople').textContent = n;
-    document.getElementById('sumGroups').textContent = selectedProgram === 'escuelas' ? groups : 1;
-    document.getElementById('sumDate').textContent = dateLabelForSummary();
-    document.getElementById('sumSlot').textContent = isHieloCombo() ? '15:00 · cinco encuentros' : (selectedSlot || 'Sin elegir');
-    if(p.priceMode === 'a_confirmar'){
-      document.getElementById('sumPrice').textContent = 'A confirmar';
-      document.getElementById('priceNote').textContent = 'Esta propuesta todavía no tiene fecha ni valor publicados.';
-    } else {
-      document.getElementById('sumPrice').textContent = money(calcPrice());
-      const base = p.prices[els.groupType.value] ?? p.prices.general ?? 0;
-      if(modalityObj.fixedPrice){
-        document.getElementById('priceNote').textContent = `Cálculo: ${n} participante(s) × ${money(modalityObj.fixedPrice)} por la modalidad seleccionada.`;
-      } else {
-        document.getElementById('priceNote').textContent = selectedProgram === 'escuelas'
-          ? `Cálculo: ${n} alumno(s) × ${money(base)}${multiplier !== 1 ? ` × ${multiplier}` : ''}. Los docentes acompañantes no abonan entrada.`
-          : `Importe orientativo: ${n} participante(s) × ${money(base)}${multiplier !== 1 ? ` × ${multiplier}` : ''}.`;
-      }
-    }
-    if(selectedProgram === 'escuelas' && n > p.capacity){
-      els.warning.classList.remove('hidden');
-      els.warning.innerHTML = `El grupo supera los ${p.capacity} alumnos. Recomendamos dividirlo y realizar ${groups} reservas, una por grupo.`;
-    } else {
-      els.warning.classList.add('hidden');
-    }
-  }
-
-  function makeReservationCode(){
-    const d = selectedDate ? String(selectedDate).replace(/[^0-9]/g, '') : 'SINFECHA';
-    const r = Math.random().toString(36).slice(2, 7).toUpperCase();
-    return `MSC-${selectedProgram.toUpperCase().slice(0,3)}-${d}-${r}`;
-  }
-
-  function collectData(existingCode){
-    const fechas = isHieloCombo()
-      ? comboSlots()
-      : (selectedDate && selectedSlot ? [{fecha:selectedDate, horario:selectedSlot}] : []);
-    return {
-      programa: programs[selectedProgram].title,
-      programa_id: selectedProgram,
-      modalidad: els.modality.value,
-      tipo: els.groupType.value,
-      fecha: isHieloCombo() ? '2026-07-27 al 2026-07-31' : selectedDate,
-      horario: isHieloCombo() ? '15:00 · cinco encuentros' : selectedSlot,
-      fechas: fechas,
-      es_combo: isHieloCombo(),
-      participantes: Number(els.people.value || 0),
-      acompanantes: Number(els.guides.value || 0),
-      grupos_necesarios: groupCount(),
-      precio_estimado: calcPrice(),
-      responsable: document.getElementById('responsible').value.trim(),
-      telefono: document.getElementById('phone').value.trim(),
-      email: document.getElementById('email').value.trim(),
-      institucion: document.getElementById('school').value.trim(),
-      direccion: document.getElementById('address').value.trim(),
-      nivel: document.getElementById('level').value,
-      curso: document.getElementById('course').value.trim(),
-      ciudad: document.getElementById('city').value.trim(),
-      temas: document.getElementById('topics').value.trim(),
-      accesibilidad: document.getElementById('accessibility').value.trim(),
-      codigo_reserva: existingCode || makeReservationCode(),
-      estado: 'PENDIENTE DE CONFIRMACIÓN DE PAGO',
-      timestamp: new Date().toISOString()
-    };
-  }
-
-  function summaryText(){
-    const d = collectData();
-    return `SOLICITUD DE RESERVA - MUSEO SCASSO\nCódigo: ${d.codigo_reserva}\nEstado: ${d.estado}\nPrograma: ${d.programa}\nModalidad: ${d.modalidad}\nFecha: ${d.fecha || 'sin elegir'}\nHorario: ${d.horario || 'sin elegir'}\nParticipantes: ${d.participantes}\nGrupos necesarios: ${d.grupos_necesarios}\nImporte orientativo: ${programs[selectedProgram].priceMode === 'a_confirmar' ? 'A confirmar' : money(d.precio_estimado)}\nResponsable: ${d.responsable}\nTeléfono: ${d.telefono}\nEmail: ${d.email}\nInstitución: ${d.institucion}\nNivel/curso: ${d.nivel} - ${d.curso}\nTemas: ${d.temas}\nConsulta/accesibilidad: ${d.accesibilidad}`;
-  }
-
-  els.prev.addEventListener('click', () => { viewDate.setMonth(viewDate.getMonth()-1); selectedDate = null; selectedSlot = null; selectedDates = []; loadAvailability(); updateSummary(); });
-  els.next.addEventListener('click', () => { viewDate.setMonth(viewDate.getMonth()+1); selectedDate = null; selectedSlot = null; selectedDates = []; loadAvailability(); updateSummary(); });
-  els.modality.addEventListener('change', () => { applyAutomaticSelectionForModality(); renderCalendar(); updateSummary(); });
-  [els.groupType, els.people, els.guides].forEach(el => el.addEventListener('input', updateSummary));
-
-  document.getElementById('copySummary').addEventListener('click', async () => {
-    await navigator.clipboard.writeText(summaryText());
-    alert('Resumen copiado.');
-  });
-
-  function ticketDocument(data){
-    const fechasTexto = data.es_combo
-      ? 'Lunes 27, martes 28, miércoles 29, jueves 30 y viernes 31 de julio de 2026 · 15:00'
-      : `${data.fecha} · ${data.horario}`;
-    const importe = programs[selectedProgram].priceMode === 'a_confirmar' ? 'A confirmar' : money(data.precio_estimado);
-    return `<!doctype html><html lang="es"><meta charset="utf-8"><title>Ticket ${data.codigo_reserva}</title>
-    <body style="margin:0;background:#efe6d7;font-family:Arial,sans-serif;color:#2d2118;display:grid;place-items:center;min-height:100vh">
-      <div style="width:min(760px,92vw);background:linear-gradient(135deg,#fff8df,#fffdf8);border:3px dashed #9b6a2e;border-radius:28px;padding:28px;box-shadow:0 18px 50px rgba(60,42,24,.18);position:relative">
-        <div style="text-transform:uppercase;letter-spacing:.14em;color:#0e646a;font-weight:900">Museo de Ciencias Naturales A. Scasso</div>
-        <h1 style="font-family:Georgia,serif;font-size:36px;margin:8px 0 4px">Ticket provisorio de pre-reserva</h1>
-        <div style="display:inline-block;background:#efe4d0;border-radius:999px;padding:8px 12px;font-family:monospace;font-weight:900;margin:8px 0 18px">${data.codigo_reserva}</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px dashed #c8a36f;border-bottom:1px dashed #c8a36f;padding:16px 0;margin:10px 0 18px">
-          <p><strong>Estado</strong><br>${data.estado}</p><p><strong>Propuesta</strong><br>${data.programa}</p>
-          <p><strong>Modalidad</strong><br>${data.modalidad}</p><p><strong>Fecha / horario</strong><br>${fechasTexto}</p>
-          <p><strong>Responsable</strong><br>${data.responsable}</p><p><strong>Participantes</strong><br>${data.participantes}</p>
-          <p><strong>Institución / grupo</strong><br>${data.institucion}</p><p><strong>Importe orientativo</strong><br>${importe}</p>
-        </div>
-        <p style="background:#fff1d5;border-left:5px solid #b97822;padding:12px;border-radius:10px">Este ticket no confirma el pago. La reserva queda pendiente hasta que Administración verifique el comprobante.</p>
-      </div>
-    </body></html>`;
-  }
-
-  function downloadTicketFile(data){
-    const blob = new Blob([ticketDocument(data)], {type:'text/html;charset=utf-8'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `ticket-${data.codigo_reserva}.html`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  function renderTicket(data){
-    const ticket = document.getElementById('ticketBox');
-    const fechasTexto = data.es_combo ? '27 al 31 de julio de 2026 · 15:00 · cinco encuentros' : `${data.fecha} · ${data.horario}`;
-    ticket.classList.remove('hidden');
-    ticket.innerHTML = `<div class="ticket-cine">
-      <div class="ticket-title">Ticket provisorio de pre-reserva</div>
-      <span class="ticket-code">${data.codigo_reserva}</span>
-      <div class="row"><span>Estado</span><strong>${data.estado}</strong></div>
-      <div class="row"><span>Propuesta</span><strong>${data.programa}</strong></div>
-      <div class="row"><span>Modalidad</span><strong>${data.modalidad}</strong></div>
-      <div class="row"><span>Fecha y horario</span><strong>${fechasTexto}</strong></div>
-      <div class="row"><span>Responsable</span><strong>${data.responsable}</strong></div>
-      <div class="row"><span>Importe orientativo</span><strong>${programs[selectedProgram].priceMode === 'a_confirmar' ? 'A confirmar' : money(data.precio_estimado)}</strong></div>
-      <p class="small">Este comprobante queda pendiente hasta que Administración confirme el pago.</p>
-      <div class="ticket-actions"><button class="ghost" type="button" id="downloadTicketBtn">Descargar ticket</button><button class="ghost" type="button" onclick="window.print()">Imprimir</button></div>
-    </div>`;
-    document.getElementById('downloadTicketBtn').addEventListener('click', () => downloadTicketFile(data));
-  }
-
-  function submitReservationJSONP(data){
-    return new Promise((resolve, reject) => {
-      const callbackName = 'scassoReserve_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-      const script = document.createElement('script');
-      let finished = false;
-      const timer = setTimeout(() => {
-        if(finished) return;
-        finished = true;
-        cleanup();
-        reject(new Error('Tiempo de espera agotado al enviar la reserva.'));
-      }, 20000);
-      function cleanup(){
-        clearTimeout(timer);
-        try{ delete window[callbackName]; }catch(e){ window[callbackName] = undefined; }
-        if(script.parentNode) script.parentNode.removeChild(script);
-      }
-      window[callbackName] = payload => {
-        if(finished) return;
-        finished = true;
-        cleanup();
-        resolve(payload);
-      };
-      script.onerror = () => {
-        if(finished) return;
-        finished = true;
-        cleanup();
-        reject(new Error('No se pudo conectar con Apps Script.'));
-      };
-      const params = new URLSearchParams({
-        action: 'reserve',
-        callback: callbackName,
-        payload: JSON.stringify(data),
-        v: String(Date.now())
-      });
-      script.src = APPS_SCRIPT_ENDPOINT + '?' + params.toString();
-      document.body.appendChild(script);
-    });
-  }
-
-  els.form.addEventListener('submit', async (ev) => {
-    ev.preventDefault();
-    els.formMessage.className = 'notice danger';
-    const email = document.getElementById('email').value.trim();
-    const email2 = document.getElementById('email2').value.trim();
-    if(!programs[selectedProgram].accepting){ els.formMessage.textContent = 'Esta propuesta todavía no tiene fechas de reserva habilitadas.'; return; }
-    if(!selectedDate || !selectedSlot){ els.formMessage.textContent = 'Falta elegir fecha y horario disponible.'; return; }
-    if(isHieloCombo() && !comboIsAvailable()){ els.formMessage.textContent = 'El combo semanal no está disponible completo. Elegí talleres individuales o consultá al museo.'; return; }
-    if(email !== email2){ els.formMessage.textContent = 'Los correos no coinciden. Escribilos manualmente para evitar errores.'; return; }
-    const code = makeReservationCode();
-    const data = collectData(code);
-    if(!APPS_SCRIPT_ENDPOINT){
-      els.formMessage.className = 'notice';
-      els.formMessage.innerHTML = 'El envío online todavía no está habilitado. Copiá el resumen y envialo a visitas@museoscasso.com.ar.';
-      renderTicket(data);
-      return;
-    }
-    try{
-      els.formMessage.className = 'notice';
-      els.formMessage.textContent = 'Enviando solicitud...';
-      const result = await submitReservationJSONP(data);
-      if(!result || !result.ok){
-        els.formMessage.className = 'notice danger';
-        els.formMessage.textContent = (result && result.message) ? result.message : 'No se pudo registrar la reserva.';
-        return;
-      }
-      els.formMessage.className = 'notice success';
-      els.formMessage.innerHTML = '<strong>Solicitud enviada y registrada.</strong> Código: <strong>' + (result.code || data.codigo_reserva) + '</strong>. Revisá el calendario y el correo.';
-      renderTicket(data);
-      loadAvailability();
-    }catch(err){
-      els.formMessage.textContent = 'No se pudo enviar la solicitud. Probá nuevamente o comunicate con el museo.';
-    }
-  });
-
-  initCards(); renderProgramInfo(); loadAvailability(); updateSummary();
+const APPS_SCRIPT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbympMMx8jODBiYDSo7bdlI-4b3ZRJhbMhiFPaM8_MlFgGNelHcr39lWbTPvXYeSarQ0mA/exec';
+const money = n => new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0}).format(Number(n)||0);
+const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const ym = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+const today = new Date(); today.setHours(0,0,0,0);
+const HIELO_DATES = ['2026-07-27','2026-07-28','2026-07-29','2026-07-30','2026-07-31'];
+const MUNDOS_DATES = ['2026-09-26','2026-09-27','2026-09-28','2026-09-29','2026-09-30','2026-10-01','2026-10-02','2026-10-03','2026-10-04'];
+const DAY_NAMES = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const programs = {
+  escuelas:{title:'Visitas escolares',tag:'Docentes',visual:'escuelas',featured:true,intro:'Visitas para grupos escolares, con reserva previa y propuestas adaptadas al nivel educativo.',bullets:['Lunes a jueves','Turnos de una hora','Hasta 30 alumnos por grupo'],note:'Actividad principal del museo',startMonth:new Date(2026,6,1),capacity:30,priceMode:'por_alumno',accepting:true,groupOptions:[['publica','Escuela pública / institución pública'],['privada','Escuela privada / institución privada'],['otro','Otro grupo educativo']],prices:{publica:2200,privada:3600,otro:3600},modalities:[{name:'Libre',multiplier:1},{name:'Guiada con métodos tradicionales',multiplier:1},{name:'Guiada con tema específico',multiplier:1}]},
+  publico:{title:'Público general',tag:'Desde octubre',visual:'publico',intro:'Turnos para visitantes individuales, familias y turismo, con inscripción previa los días viernes.',bullets:['Previsto para octubre de 2026','Día viernes','Recorridos de una hora'],note:'Apertura con turno previo',startMonth:new Date(2026,9,1),capacity:15,priceMode:'por_persona',accepting:true,groupOptions:[['general','Público general / familia'],['menor','Menor'],['otro','Otro grupo']],prices:{general:3600,menor:2200,otro:3600},modalities:[{name:'Recorrido general sin guía',multiplier:1},{name:'Recorrido familiar con guía',multiplier:1.35},{name:'Recorrido especial temático',multiplier:1.75}]},
+  hielo:{title:'Exploradores de la Edad del Hielo',tag:'27 al 31 de julio',visual:'hielo',intro:'Talleres simultáneos de vacaciones de invierno en dos salas del museo.',bullets:['27 al 31/07/2026','15:00 a 16:00','Selección por días o combo completo con descuento'],note:'Taller especial para infancias',startMonth:new Date(2026,6,1),capacity:20,priceMode:'hielo_multi',accepting:true,groupOptions:[['general','Participante individual']],prices:{individual:6000,combo:24000},modalities:[{name:'Seleccionar talleres / días',multiplier:1}]},
+  mundos:{title:'Jornadas Mundos Perdidos',tag:'26 sep – 4 oct',visual:'mundos',intro:'Jornadas de divulgación científica dedicadas al río Paraná, con actividades intensivas de fin de semana y propuestas durante la semana.',bullets:['26/09 al 04/10/2026','Pase completo con descuento','Días particulares a elección','Menores sin cargo'],note:'Evento especial anual',startMonth:new Date(2026,8,1),capacity:250,priceMode:'mundos_multi',accepting:true,groupOptions:[['general','Público general']],prices:{dia:4500,pase:18000},modalities:[{name:'Pase completo',fixedPrice:18000},{name:'Días particulares',multiplier:1}]},
+  explorando:{title:'Explorando por el tiempo',tag:'Próximamente',visual:'explorando',intro:'Experiencia de realidad inmersiva con proyecciones y audio. Simula una máquina del tiempo.',bullets:['Capacidad: 20 personas','Proyecciones y audio','Programas temporales a definir'],note:'Fechas a anunciar',startMonth:new Date(2026,9,1),capacity:20,priceMode:'a_confirmar',accepting:false,groupOptions:[['general','Público general / escuela / grupo']],prices:{general:0},modalities:[{name:'Programa pasado'},{name:'Programa presente'},{name:'Programa futuro'}]}
+};
+let selectedProgram='escuelas', viewDate=new Date(programs.escuelas.startMonth), selectedDate=null, selectedSlot=null, selectedDates=[], currentSlots={}, mobileFocusedDate=null;
+let hieloWorkshop='hielo_exploradores', hieloSelected=[...HIELO_DATES], mundosMode='Pase completo', mundosSelected=[...MUNDOS_DATES], mundosAdults=1, mundosMinors=0;
+const $ = id => document.getElementById(id);
+const els={cards:$('programCards'),info:$('programInfo'),modality:$('modality'),groupType:$('groupType'),groupTypeLabel:$('groupTypeLabel'),people:$('people'),peopleLabel:$('peopleLabel'),guides:$('guides'),warning:$('capacityWarning'),days:$('calendarDays'),monthTitle:$('monthTitle'),form:$('datos'),formMessage:$('formMessage'),availabilityMessage:$('availabilityMessage'),submitBtn:$('submitBtn'),special:$('specialOptions'),ticketBox:$('ticketBox'),newBtn:$('newReservationBtn')};
+function parseDate(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d,12)}
+function isPast(s){const d=parseDate(s);d.setHours(0,0,0,0);return d<today}
+function fmtDate(s){if(!s)return '';const d=parseDate(s);return `${DAY_NAMES[d.getDay()]} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`}
+function shortDate(s){const d=parseDate(s);return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`}
+function slotsToText(slots){if(!slots.length)return 'Sin elegir';return slots.map(x=>`${fmtDate(x.fecha)} · ${x.horario}`).join(' | ')}
+function initCards(){els.cards.innerHTML=Object.entries(programs).map(([key,p])=>`<button class="program ${key===selectedProgram?'active':''} ${p.featured?'featured':''}" type="button" data-program="${key}"><div class="program-visual ${p.visual}"><span class="mark">${p.title}</span></div><div class="program-body"><span class="tag">${p.tag}</span><h3>${p.title}</h3><p>${p.intro}</p><ul>${p.bullets.map(b=>`<li>${b}</li>`).join('')}</ul><div class="note">${p.note}</div></div></button>`).join('');document.querySelectorAll('.program').forEach(btn=>btn.addEventListener('click',()=>selectProgram(btn.dataset.program)))}
+function selectProgram(key){selectedProgram=key;viewDate=new Date(programs[key].startMonth);selectedDate=null;selectedSlot=null;selectedDates=[];mobileFocusedDate=null;if(key==='publico')setPeople(2,0,'Familia / público general');if(key==='hielo'){setPeople(1,0,'Inicial');hieloSelected=[...HIELO_DATES]}if(key==='mundos'){setPeople(1,0,'Familia / público general');mundosMode='Pase completo';mundosSelected=[...MUNDOS_DATES]}if(key==='explorando')setPeople(1,0,'Otro');if(key==='escuelas')setPeople(25,2,'Inicial');initCards();renderProgramInfo();loadAvailability();updateSummary();$('detalles').scrollIntoView({behavior:'smooth',block:'start'})}
+function setPeople(p,g,level){els.people.value=p;els.guides.value=g;$('level').value=level}
+function selectedModalityObj(){const p=programs[selectedProgram];return p.modalities.find(m=>m.name===els.modality.value)||p.modalities[0]}
+function backendProgram(){if(selectedProgram==='hielo')return hieloWorkshop;return selectedProgram}
+function renderProgramInfo(){const p=programs[selectedProgram];let extra='';if(selectedProgram==='escuelas') extra='<br><span class="small">Los docentes no abonan entrada: 1 acompañante cada 8 alumnos. Para grupos mayores a 30 alumnos se recomienda dividir la reserva.</span>';if(selectedProgram==='publico') extra='<br><span class="small">Público general previsto para octubre de 2026, los viernes, con inscripción previa.</span>';if(selectedProgram==='hielo') extra='<br><span class="small">Se puede elegir uno, varios o los cinco encuentros. Si se eligen los cinco, se aplica el combo semanal con descuento.</span>';if(selectedProgram==='mundos') extra='<br><span class="small">Menores sin cargo. El pase completo aplica descuento y cubre los nueve días.</span>';if(selectedProgram==='explorando') extra='<br><span class="small">Esta propuesta todavía no tiene fechas de reserva habilitadas.</span>';els.info.innerHTML=`<strong>${p.title}.</strong> ${p.intro}<br><span class="small">Capacidad orientativa: ${p.capacity} participantes por grupo o franja.</span>${extra}`;els.modality.innerHTML=p.modalities.map(m=>`<option value="${m.name}">${m.name}</option>`).join('');els.groupType.innerHTML=p.groupOptions.map(([value,label])=>`<option value="${value}">${label}</option>`).join('');els.groupTypeLabel.textContent=selectedProgram==='escuelas'?'Tipo de institución':'Tipo de visitante o grupo';els.peopleLabel.textContent=selectedProgram==='mundos'?'Adultos que pagan':'Cantidad de participantes';els.submitBtn.disabled=!p.accepting;renderSpecialOptions()}
+function renderSpecialOptions(){els.special.classList.add('hidden');els.special.innerHTML='';if(selectedProgram==='hielo'){els.special.classList.remove('hidden');const workshops=[['hielo_exploradores','Exploradores de la Edad del Hielo · 7 a 12 años · Caro Mosto y Ana Forasiepi · cupo 20'],['hielo_gigantes','Gigantes del hielo: aventuras en el Pleistoceno · 3 a 6 años · Alejandra Cepeda y Silvia Sunino · cupo 25']];els.special.innerHTML=`<h3>Elegí taller y días</h3><label for="hieloWorkshop">Sala / propuesta</label><select id="hieloWorkshop">${workshops.map(([v,l])=>`<option value="${v}" ${v===hieloWorkshop?'selected':''}>${l}</option>`).join('')}</select><div class="choice-grid" id="hieloDateChoices">${HIELO_DATES.map((d,i)=>dateCheckboxHtml('hieloDay',d,hieloSelected.includes(d),`Día ${i+1}`,hieloTitle(i))).join('')}</div><button class="ghost" type="button" id="selectAllHielo">Elegir los 5 días con descuento</button><div id="hieloDiscount" class="discount hidden"></div>`;$('hieloWorkshop').onchange=e=>{hieloWorkshop=e.target.value;loadAvailability();updateSummary()};document.querySelectorAll('input[name="hieloDay"]').forEach(ch=>ch.onchange=()=>{hieloSelected=[...document.querySelectorAll('input[name="hieloDay"]:checked')].map(x=>x.value);selectedDates=[...hieloSelected];renderCalendar();updateSummary();renderSpecialOptions()});$('selectAllHielo').onclick=()=>{hieloSelected=[...HIELO_DATES];selectedDates=[...hieloSelected];renderSpecialOptions();renderCalendar();updateSummary()};}if(selectedProgram==='mundos'){els.special.classList.remove('hidden');els.special.innerHTML=`<h3>Elegí modalidad de Jornadas</h3><div class="two"><div><label for="mundosMode">Modalidad</label><select id="mundosMode"><option ${mundosMode==='Pase completo'?'selected':''}>Pase completo</option><option ${mundosMode==='Días particulares'?'selected':''}>Días particulares</option></select></div><div><label for="minorCount">Menores sin cargo</label><input id="minorCount" type="number" min="0" value="${mundosMinors}"></div></div><div class="choice-grid" id="mundosDateChoices">${MUNDOS_DATES.map((d,i)=>dateCheckboxHtml('mundosDay',d,mundosSelected.includes(d),mundosLabel(d),mundosMeta(d))).join('')}</div><div id="mundosDiscount" class="discount hidden"></div>`;$('mundosMode').onchange=e=>{mundosMode=e.target.value;if(mundosMode==='Pase completo')mundosSelected=[...MUNDOS_DATES];renderSpecialOptions();renderCalendar();updateSummary()};$('minorCount').oninput=e=>{mundosMinors=Math.max(0,Number(e.target.value||0));updateSummary()};document.querySelectorAll('input[name="mundosDay"]').forEach(ch=>{ch.disabled=mundosMode==='Pase completo';ch.onchange=()=>{mundosSelected=[...document.querySelectorAll('input[name="mundosDay"]:checked')].map(x=>x.value);selectedDates=[...mundosSelected];renderCalendar();updateSummary();renderSpecialOptions()}})}updateSpecialNotices()}
+function dateCheckboxHtml(name,d,checked,title,meta){return `<label class="date-choice"><input type="checkbox" name="${name}" value="${d}" ${checked?'checked':''} ${isPast(d)?'disabled':''}><span><strong>${title}</strong><span class="meta">${fmtDate(d)} · ${meta}</span></span></label>`}
+function hieloTitle(i){return ['Pago de los Arroyos y sus fósiles','Paleontología y tiempo geológico','La megafauna','Macro y microfauna al microscopio','Fogón de cierre e integración'][i]}
+function mundosLabel(d){const date=parseDate(d);return `${DAY_NAMES[date.getDay()]} ${shortDate(d)}`}
+function mundosMeta(d){const date=parseDate(d);const day=date.getDay();return (day===0||day===6)?'Fin de semana intensivo':'Talleres, capacitaciones y charlas por la tarde'}
+function updateSpecialNotices(){if(selectedProgram==='hielo'){const box=$('hieloDiscount');if(!box)return;if(hieloSelected.length===5){box.classList.remove('hidden');box.textContent='Combo semanal aplicado: cinco talleres con descuento.'}else if(hieloSelected.length>1){box.classList.remove('hidden');box.textContent=`Seleccionaste ${hieloSelected.length} talleres individuales.`}else box.classList.add('hidden')}if(selectedProgram==='mundos'){const box=$('mundosDiscount');if(!box)return;if(mundosMode==='Pase completo'){box.classList.remove('hidden');box.textContent='Pase completo aplicado: nueve días con descuento. Menores sin cargo.'}else if(mundosSelected.length>=4){box.classList.remove('hidden');box.textContent='Selección múltiple: se aplica descuento automático orientativo.'}else box.classList.add('hidden')}}
+function showAvailabilityMessage(text,type='notice'){els.availabilityMessage.className=text?`notice ${type}`:'notice hidden';els.availabilityMessage.innerHTML=text||''}
+function loadAvailability(){currentSlots={};const p=programs[selectedProgram];if(!p.accepting){showAvailabilityMessage('<strong>Próximamente.</strong> Esta experiencia todavía no tiene fechas habilitadas.');renderCalendar();return}showAvailabilityMessage('Consultando disponibilidad...');const old=$('scassoAvailabilityScript');if(old)old.remove();const cb='scassoAvailabilityCallback';let finished=false;const script=document.createElement('script');script.id='scassoAvailabilityScript';script.async=true;const timer=setTimeout(()=>{if(finished)return;finished=true;showAvailabilityMessage('No se pudo consultar la disponibilidad. Intentá nuevamente o escribí al museo.','danger');renderCalendar();script.remove()},15000);window[cb]=payload=>{if(finished)return;finished=true;clearTimeout(timer);if(payload&&payload.ok&&payload.slots){currentSlots=payload.slots;showAvailabilityMessage('')}else showAvailabilityMessage((payload&&payload.message)||'No se pudo consultar la disponibilidad.','danger');renderCalendar();script.remove()};script.onerror=()=>{if(finished)return;finished=true;clearTimeout(timer);showAvailabilityMessage('No se pudo consultar la disponibilidad. Intentá nuevamente o escribí al museo.','danger');renderCalendar();script.remove()};const params=new URLSearchParams({action:'availability',program:backendProgram(),month:ym(viewDate),callback:cb,v:String(Date.now())});script.src=`${APPS_SCRIPT_ENDPOINT}?${params.toString()}`;document.body.appendChild(script)}
+function renderCalendar(){if(selectedProgram==='hielo')selectedDates=[...hieloSelected];if(selectedProgram==='mundos')selectedDates=[...mundosSelected];const year=viewDate.getFullYear(),month=viewDate.getMonth();els.monthTitle.textContent=new Intl.DateTimeFormat('es-AR',{month:'long',year:'numeric'}).format(viewDate).replace(/^./,c=>c.toUpperCase());const first=new Date(year,month,1),start=new Date(year,month,1-((first.getDay()+6)%7));let html='';for(let i=0;i<42;i++){const d=new Date(start);d.setDate(start.getDate()+i);const key=ymd(d),inMonth=d.getMonth()===month,past=isPast(key),slots=past?[]:(currentSlots[key]||[]);html+=`<div class="day ${inMonth?'':'muted'} ${past?'past':''}" data-date="${key}"><div class="n">${d.getDate()}</div>`;if(slots.length){html+=slots.map(([time,available,remaining])=>{const multiActive=selectedDates.includes(key),active=(selectedDate===key&&selectedSlot===time)||multiActive;const cls=!available?'full':active?'active combo':'';const showRemaining=selectedProgram!=='escuelas'&&Number.isFinite(Number(remaining));const label=!available?'Completo':active?`✓ ${time}`:`${time}${showRemaining?` · ${remaining}`:''}`;return `<button type="button" class="slot ${cls}" ${!available?'disabled':''} data-date="${key}" data-time="${time}" data-short="${!available?'×':active?'✓':time}">${label}</button>`}).join('')}else if(inMonth&&!past){html+='<button type="button" class="slot closed" disabled data-short="—">Sin turno</button>'}html+='</div>'}els.days.innerHTML=html;document.querySelectorAll('.slot:not(.full):not(.closed)').forEach(b=>b.addEventListener('click',()=>handleSlotClick(b.dataset.date,b.dataset.time)));document.querySelectorAll('.day').forEach(day=>day.addEventListener('click',e=>{if(e.target.classList.contains('slot'))return;mobileFocusedDate=day.dataset.date;renderMobileDayDetail()}));renderMobileDayDetail()}
+function handleSlotClick(date,time){if(selectedProgram==='hielo'){toggleInArray(hieloSelected,date);selectedDates=[...hieloSelected];renderSpecialOptions()}else if(selectedProgram==='mundos'){if(mundosMode==='Días particulares'){toggleInArray(mundosSelected,date);selectedDates=[...mundosSelected];renderSpecialOptions()}}else{selectedDate=date;selectedSlot=time;selectedDates=[];$('datos').scrollIntoView({behavior:'smooth',block:'start'})}renderCalendar();updateSummary()}
+function toggleInArray(arr,value){const idx=arr.indexOf(value);if(idx>=0)arr.splice(idx,1);else arr.push(value);arr.sort()}
+function renderMobileDayDetail(){const box=$('mobileDayDetail');if(!mobileFocusedDate){box.classList.add('hidden');return}const slots=currentSlots[mobileFocusedDate]||[];box.classList.remove('hidden');box.innerHTML=`<strong>${fmtDate(mobileFocusedDate)}</strong><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">${slots.length?slots.map(([t,a])=>`<button type="button" class="slot ${!a?'full':''}" ${!a?'disabled':''} onclick="handleSlotClick('${mobileFocusedDate}','${t}')" data-short="${t}">${a?t:'Completo'}</button>`).join(''):'<span class="small">Sin turnos para seleccionar.</span>'}</div>`}
+function currentSelectionSlots(){if(selectedProgram==='hielo')return hieloSelected.filter(d=>!isPast(d)).map(fecha=>({fecha,horario:'15:00'}));if(selectedProgram==='mundos')return mundosSelected.filter(d=>!isPast(d)).map(fecha=>({fecha,horario:'10:00'}));return selectedDate&&selectedSlot?[{fecha:selectedDate,horario:selectedSlot}]:[]}
+function groupCount(){const p=programs[selectedProgram],n=Math.max(1,Number(els.people.value||1));return Math.ceil(n/p.capacity)}
+function calcPrice(){const p=programs[selectedProgram],n=Math.max(1,Number(els.people.value||1));if(p.priceMode==='a_confirmar')return 0;if(p.priceMode==='hielo_multi'){const count=currentSelectionSlots().length;if(count===5)return p.prices.combo*n;return p.prices.individual*count*n}if(p.priceMode==='mundos_multi'){const adults=Math.max(0,Number(els.people.value||0));const count=currentSelectionSlots().length;if(mundosMode==='Pase completo'||count===9)return p.prices.pase*adults;let total=p.prices.dia*count*adults;if(count>=4)total*=0.8;else if(count>=2)total*=0.9;return Math.round(total)}const type=els.groupType.value,base=p.prices[type]??p.prices.general??0,mod=selectedModalityObj();if(mod.fixedPrice)return mod.fixedPrice*n;return base*n*(mod.multiplier||1)}
+function updateSummary(){const p=programs[selectedProgram],slots=currentSelectionSlots();let n=Math.max(1,Number(els.people.value||1));if(selectedProgram==='mundos'){mundosAdults=Math.max(0,Number(els.people.value||0));n=mundosAdults+mundosMinors}document.getElementById('sumProgram').textContent=p.title;document.getElementById('sumModality').textContent=selectedProgram==='hielo'?hieloWorkshopLabel():selectedProgram==='mundos'?mundosMode:els.modality.value;document.getElementById('sumPeople').textContent=selectedProgram==='mundos'?`${n} (${mundosAdults} adultos, ${mundosMinors} menores sin cargo)`:n;document.getElementById('sumGroups').textContent=selectedProgram==='escuelas'?groupCount():1;document.getElementById('sumDate').textContent=slots.length?slots.map(s=>shortDate(s.fecha)).join(' · '):'Sin elegir';document.getElementById('sumSlot').textContent=slots.length?[...new Set(slots.map(s=>s.horario))].join(' · '):'Sin elegir';if(p.priceMode==='a_confirmar'){document.getElementById('sumPrice').textContent='A confirmar';document.getElementById('priceNote').textContent='Esta propuesta todavía no tiene fecha ni valor publicados.'}else{document.getElementById('sumPrice').textContent=money(calcPrice());document.getElementById('priceNote').textContent=priceNoteText(slots.length)}if(selectedProgram==='escuelas'&&Number(els.people.value)>p.capacity){els.warning.classList.remove('hidden');els.warning.innerHTML=`El grupo supera los ${p.capacity} alumnos. Recomendamos dividirlo y realizar ${groupCount()} reservas, una por grupo.`}else els.warning.classList.add('hidden');updateSpecialNotices()}
+function priceNoteText(count){if(selectedProgram==='hielo')return count===5?'Combo semanal con descuento aplicado.':`Cálculo: ${count} taller(es) individual(es).`;if(selectedProgram==='mundos')return mundosMode==='Pase completo'?'Pase completo con descuento. Menores sin cargo.':`Cálculo orientativo por ${count} día(s). Menores sin cargo.`;const p=programs[selectedProgram],base=p.prices[els.groupType.value]??p.prices.general??0,n=Math.max(1,Number(els.people.value||1));return selectedProgram==='escuelas'?`Cálculo: ${n} alumno(s) × ${money(base)}. Docentes acompañantes no abonan.`:`Importe orientativo: ${n} participante(s) × ${money(base)}.`}
+function hieloWorkshopLabel(){return hieloWorkshop==='hielo_gigantes'?'Gigantes del hielo · 3 a 6 años':'Exploradores de la Edad del Hielo · 7 a 12 años'}
+function makeReservationCode(){const d=new Date();return `MSC-${backendProgram().toUpperCase().slice(0,4)}-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}-${Math.random().toString(36).slice(2,7).toUpperCase()}`}
+function collectData(code){const slots=currentSelectionSlots(),p=programs[selectedProgram];let participants=Number(els.people.value||0),adults=0,minors=0,duration=60;if(selectedProgram==='mundos'){adults=Math.max(0,Number(els.people.value||0));minors=mundosMinors;participants=adults+minors;duration=480}return{programa:p.title,programa_id:backendProgram(),taller_id:selectedProgram==='hielo'?hieloWorkshop:'',taller_nombre:selectedProgram==='hielo'?hieloWorkshopLabel():'',modalidad:selectedProgram==='hielo'?(slots.length===5?'Combo semanal: cinco talleres':'Talleres seleccionados'):selectedProgram==='mundos'?mundosMode:els.modality.value,tipo:els.groupType.value,fecha:slots[0]?.fecha||'',horario:slots[0]?.horario||'',fecha_resumen:slots.length?slots.map(s=>shortDate(s.fecha)).join(' | '):'',horario_resumen:slots.length?[...new Set(slots.map(s=>s.horario))].join(' | '):'',fechas:slots,durationMinutes:duration,participantes:participants,adultos:adults,menores:minors,acompanantes:Number(els.guides.value||0),grupos_necesarios:groupCount(),precio_estimado:calcPrice(),responsable:$('responsible').value.trim(),telefono:$('phone').value.trim(),email:$('email').value.trim(),institucion:$('school').value.trim(),direccion:$('address').value.trim(),nivel:$('level').value,curso:$('course').value.trim(),ciudad:$('city').value.trim(),temas:$('topics').value.trim(),accesibilidad:$('accessibility').value.trim(),codigo_reserva:code,estado:'PENDIENTE DE CONFIRMACIÓN DE PAGO',timestamp:new Date().toISOString()}}
+function summaryText(){const d=collectData(makeReservationCode());return `SOLICITUD DE RESERVA - MUSEO SCASSO\nCódigo: ${d.codigo_reserva}\nEstado: ${d.estado}\nPrograma: ${d.programa}\nModalidad: ${d.modalidad}\nFechas: ${slotsToText(d.fechas)}\nParticipantes: ${d.participantes}\nImporte orientativo: ${money(d.precio_estimado)}\nResponsable: ${d.responsable}\nTeléfono: ${d.telefono}\nEmail: ${d.email}\nInstitución: ${d.institucion}`}
+function ticketDocument(data){const fechas=slotsToText(data.fechas);const importe=programs[selectedProgram].priceMode==='a_confirmar'?'A confirmar':money(data.precio_estimado);return `<!doctype html><html lang="es"><meta charset="utf-8"><title>Ticket ${data.codigo_reserva}</title><body style="margin:0;background:#efe6d7;font-family:Arial,sans-serif;color:#2d2118;display:grid;place-items:center;min-height:100vh"><div style="width:min(760px,92vw);background:linear-gradient(135deg,#fff8df,#fffdf8);border:3px dashed #9b6a2e;border-radius:28px;padding:28px;box-shadow:0 18px 50px rgba(60,42,24,.18)"><div style="text-transform:uppercase;letter-spacing:.14em;color:#0e646a;font-weight:900">Museo de Ciencias Naturales A. Scasso</div><h1 style="font-family:Georgia,serif;font-size:32px;margin:8px 0 4px">Ticket provisorio de pre-reserva</h1><div style="display:inline-block;background:#efe4d0;border-radius:999px;padding:8px 12px;font-family:monospace;font-weight:900;margin:8px 0 18px">${data.codigo_reserva}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px dashed #c8a36f;border-bottom:1px dashed #c8a36f;padding:16px 0;margin:10px 0 18px"><p><strong>Estado</strong><br>${data.estado}</p><p><strong>Propuesta</strong><br>${data.programa}</p><p><strong>Modalidad</strong><br>${data.modalidad}</p><p><strong>Fecha / horario</strong><br>${fechas}</p><p><strong>Responsable</strong><br>${data.responsable}</p><p><strong>Participantes</strong><br>${data.participantes}</p><p><strong>Institución / grupo</strong><br>${data.institucion}</p><p><strong>Importe orientativo</strong><br>${importe}</p></div><p style="background:#fff1d5;border-left:5px solid #b97822;padding:12px;border-radius:10px">Este ticket no confirma el pago. La reserva queda pendiente hasta que Administración verifique el comprobante.</p></div></body></html>`}
+function downloadTicketFile(data){const blob=new Blob([ticketDocument(data)],{type:'text/html;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`ticket-${data.codigo_reserva}.html`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
+function printTicket(data){const w=window.open('','_blank');w.document.open();w.document.write(ticketDocument(data));w.document.close();w.focus();setTimeout(()=>w.print(),400)}
+function renderTicket(data){els.ticketBox.classList.remove('hidden');els.ticketBox.innerHTML=`<div class="ticket-cine"><div class="ticket-title">Ticket provisorio de pre-reserva</div><span class="ticket-code">${data.codigo_reserva}</span><div class="row"><span>Estado</span><strong>${data.estado}</strong></div><div class="row"><span>Propuesta</span><strong>${data.programa}</strong></div><div class="row"><span>Modalidad</span><strong>${data.modalidad}</strong></div><div class="row"><span>Fecha y horario</span><strong>${slotsToText(data.fechas)}</strong></div><div class="row"><span>Responsable</span><strong>${data.responsable}</strong></div><div class="row"><span>Importe orientativo</span><strong>${money(data.precio_estimado)}</strong></div><p class="small">Este comprobante queda pendiente hasta que Administración confirme el pago.</p><div class="ticket-actions"><button class="ghost" type="button" id="downloadTicketBtn">Descargar ticket</button><button class="ghost" type="button" id="printTicketBtn">Imprimir ticket</button></div></div>`;$('downloadTicketBtn').onclick=()=>downloadTicketFile(data);$('printTicketBtn').onclick=()=>printTicket(data)}
+function submitReservationJSONP(data){return new Promise((resolve,reject)=>{const callbackName='scassoReserve_'+Date.now()+'_'+Math.random().toString(36).slice(2);const script=document.createElement('script');let finished=false;const timer=setTimeout(()=>{if(finished)return;finished=true;cleanup();reject(new Error('Tiempo de espera agotado al enviar la reserva.'))},20000);function cleanup(){clearTimeout(timer);try{delete window[callbackName]}catch(e){window[callbackName]=undefined}if(script.parentNode)script.parentNode.removeChild(script)}window[callbackName]=payload=>{if(finished)return;finished=true;cleanup();resolve(payload)};script.onerror=()=>{if(finished)return;finished=true;cleanup();reject(new Error('No se pudo conectar con Apps Script.'))};const params=new URLSearchParams({action:'reserve',callback:callbackName,payload:JSON.stringify(data),v:String(Date.now())});script.src=APPS_SCRIPT_ENDPOINT+'?'+params.toString();document.body.appendChild(script)})}
+function validateBeforeSubmit(){const slots=currentSelectionSlots();if(!programs[selectedProgram].accepting)return 'Esta propuesta todavía no tiene fechas de reserva habilitadas.';if(!slots.length)return 'Falta elegir al menos una fecha u horario disponible.';if($('email').value.trim()!==$('email2').value.trim())return 'Los correos no coinciden. Escribilos manualmente para evitar errores.';if(selectedProgram==='mundos'&&Number(els.people.value||0)<=0)return 'Indicá al menos un adulto que paga para Mundos Perdidos.';return ''}
+els.form.addEventListener('submit',async ev=>{ev.preventDefault();els.formMessage.className='notice danger';const err=validateBeforeSubmit();if(err){els.formMessage.textContent=err;return}const data=collectData(makeReservationCode());try{els.formMessage.className='notice';els.formMessage.textContent='Enviando solicitud...';const result=await submitReservationJSONP(data);if(!result||!result.ok){els.formMessage.className='notice danger';els.formMessage.textContent=(result&&result.message)?result.message:'No se pudo registrar la reserva.';return}data.codigo_reserva=result.code||data.codigo_reserva;els.formMessage.className='notice success';els.formMessage.innerHTML='<strong>Solicitud enviada y registrada.</strong> Código: <strong>'+data.codigo_reserva+'</strong>. Revisá el calendario y el correo.';renderTicket(data);els.newBtn.classList.remove('hidden');loadAvailability()}catch(err){els.formMessage.className='notice danger';els.formMessage.textContent='No se pudo enviar la solicitud. Probá nuevamente o comunicate con el museo.'}});
+function resetForNewReservation(){['responsible','phone','email','email2','school','address','course','topics','accessibility'].forEach(id=>$(id).value='');$('accept').checked=false;selectedDate=null;selectedSlot=null;selectedDates=[];els.formMessage.className='notice hidden';els.formMessage.textContent='';els.ticketBox.classList.add('hidden');els.ticketBox.innerHTML='';els.newBtn.classList.add('hidden');if(selectedProgram==='hielo')hieloSelected=[];if(selectedProgram==='mundos'&&mundosMode==='Días particulares')mundosSelected=[];renderSpecialOptions();renderCalendar();updateSummary();$('propuesta').scrollIntoView({behavior:'smooth'})}
+$('prevMonth').onclick=()=>{viewDate.setMonth(viewDate.getMonth()-1);selectedDate=null;selectedSlot=null;loadAvailability();updateSummary()};$('nextMonth').onclick=()=>{viewDate.setMonth(viewDate.getMonth()+1);selectedDate=null;selectedSlot=null;loadAvailability();updateSummary()};$('todayBtn').onclick=()=>{viewDate=new Date(today);loadAvailability();updateSummary()};els.modality.addEventListener('change',()=>{if(selectedProgram==='mundos'){mundosMode=els.modality.value}renderSpecialOptions();renderCalendar();updateSummary()});[els.groupType,els.people,els.guides].forEach(el=>el.addEventListener('input',()=>{if(selectedProgram==='mundos')mundosAdults=Number(els.people.value||0);updateSummary()}));$('copySummary').onclick=async()=>{await navigator.clipboard.writeText(summaryText());alert('Resumen copiado.')};els.newBtn.onclick=resetForNewReservation;
+initCards();renderProgramInfo();loadAvailability();updateSummary();
 </script>
 </body>
 </html>
